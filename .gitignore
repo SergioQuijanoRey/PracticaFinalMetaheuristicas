@@ -1,0 +1,5 @@
+/* Ignoramos los binarios */
+*.c.o
+*.c.o.d
+*.cc.o
+*.cc.o.d
