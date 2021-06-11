@@ -1,0 +1,6 @@
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/rebuild_cache.dir
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/testsolis.dir
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/cec17_test_func.dir
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/testrandom.dir
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/edit_cache.dir
+/home/sergio/GitProjects/PracticaFinalMetaheuristicas/src/CMakeFiles/test.dir
