@@ -1,6 +1,7 @@
 import numpy as np
 import cec17
-from battle_royale import BattleRoyale, Player
+from battle_royale import BattleRoyale
+from player import Player
 
 if __name__ == "__main__":
     print("==> Inicializamos la semilla aleatoria")
@@ -26,11 +27,15 @@ if __name__ == "__main__":
         cec17.print_output();
 
         # Inicalizamos nuestra metaheuristica
-        mh = BattleRoyale(dimension = dimension, ev_per_dimension = ev_per_dimension)
+        mh = BattleRoyale(dimension = dimension, ev_per_dimension = ev_per_dimension, number_of_players = 100)
 
         # Tomamos la solucion a partir de la busqueda
-        best_player = mh.search()
+        best_player = mh.run_game()
+        dummy_player = mh.dummy_search()
 
     # Mostramos el error alcanzando
     err = cec17.fitness(best_player.to_list(), dimension)
     print(f"Error alcanzado: {err}")
+
+    dummy_err = cec17.fitness(dummy_player.to_list(), dimension)
+    print(f"Error dummy: {dummy_err}")
