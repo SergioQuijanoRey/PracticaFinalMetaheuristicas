@@ -31,3 +31,15 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
 # TODOs
 
 * [ ] Elegir el número de jugadores en función a la dimensión con la que estemos trabajando
+
+# Algoritmo
+
+1. Generar una gran población de jugadores aleatorios
+2. Aplicar una búsqueda local muy suave
+3. Mientras no hayamos acabado, Fase 1
+    3.1. Ronda de búsqueda local para todos los jugadores
+    3.2. Ronda de asesinatos entre jugadores cercanos
+    3.3. Ronda de intensificación para los revividos en esta ronda
+4. Mientras no hayamos acabado, Fase 2
+    4.1. Opt 1: Seleccionamos aleatoriamente grupos de k jugadores y eliminamos al peor de cada grupo
+    4.1. Opt 2: Eliminamos a los peores individuos de la poblacion, todavia con probabilidad de revivir
