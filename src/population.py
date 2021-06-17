@@ -61,9 +61,37 @@ class Population:
             curr_fit, ev_cons = player.fitness()
             fit_ev_cons += ev_cons
 
-            if curr_fit > best_fit:
+            if curr_fit < best_fit:
                 best_player = player
                 best_fit = curr_fit
 
         # Devolvemos el mejor jugador que hemos encontrado, y las iteraciones consumidas
         return best_player, fit_ev_cons
+
+    def soft_local_search_over_all_players(self):
+        """Aplica una busqueda local suave a todos los jugadores de la poblacion"""
+
+        # TODO -- hay que comprobar que no hayamos agotado todas las iteraciones
+        for player in self.players:
+            player.soft_local_search()
+
+    def kill_closed_players(self):
+        """Los jugadores que estan cerca unos de otros luchan
+
+        Returns:
+        ========
+        resurrected_players_indixes: indices en la poblacion de los jugadores que han muerto y que
+                                     han resucitado
+        """
+        pass
+
+    def grace_time_for_resurrecteds(self, resurrected_players_indixes):
+        """
+        Intensifica a los jugadores que han muerto y que han resucitado, para que puedan ser
+        competitivos con el resto de jugadores
+
+        Parameters:
+        ===========
+        resurrected_players_indixes: indices en la poblacion de los jugadores que han resucitado
+        """
+        pass

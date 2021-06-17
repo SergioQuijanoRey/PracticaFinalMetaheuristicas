@@ -2,6 +2,8 @@ import numpy as np
 import cec17 as api
 from population import Population
 from player import Player
+from config import Config
+from evals_counter import EvalsCounter
 
 class BattleRoyale:
     """Clase que representa la metaheuristica que desarrollamos.
@@ -9,9 +11,8 @@ class BattleRoyale:
     la funcion cec17.init
     """
 
-    def __init__(self, dimension, ev_per_dimension, number_of_players):
+    def __init__(self, dimension, number_of_players):
         self.dimension = dimension
-        self.ev_per_dimension = ev_per_dimension
         self.population = None
         self.number_of_players = number_of_players
 
@@ -23,7 +24,6 @@ class BattleRoyale:
 
         evals = 0
         while evals < self.dimension * self.ev_per_dimension:
-            print("..", end=" - ")
             evals += 1000
         print("")
 
@@ -31,21 +31,48 @@ class BattleRoyale:
 
     def max_evals(self):
         """Calcula el maximo de evaluaciones del fitness que se pueden consumir"""
-        return self.dimension * self.ev_per_dimension
+        return self.dimension * Config.ev_per_dimension
 
 
     def run_game(self):
-        """Comienza una partida y devuelve al jugador ganador."""
+        """Comienza una partida y devuelve al jugador ganador.
+
+        Returns:
+        ========
+        best_player: el jugador que gana la partida
+
+        TODO -- borrar los mensajes por pantalla porque pueden relantecer la ejecucion
+        """
 
         # Parametros iniciales
-        evals = 0
         best_player = None
 
-        # Creamos una poblacion de jugadores inicial
-        evals = 0
-        while evals < self.max_evals():
-            self.population = Population.random_population(self.number_of_players, self.dimension)
-            best_player, cons_evals = self.population.get_best_player()
-            evals += cons_evals
+        # Controlamos las evaluaciones que nos quedan
+        ev_counter = EvalsCounter()
 
-        return best_player
+        print("--> Fase inicial: generando jugadores en posiciones aleatorias")
+        self.population = Population.random_population(self.number_of_players, self.dimension)
+
+        print("--> Fase 1")
+        while ev_counter.get_evals() < self.max_evals() * Config.phase1_percentage:
+            # Aplicamos una busqueda suave sobre cada jugador
+            self.population.soft_local_search_over_all_players()
+
+            # Ronda de asesinatos entre jugadores iniciales
+            # Se devuelven los indices en la poblacion de los jugadores que han resucitado, para
+            # poder intensificarlos mas tarde
+            resurrected_players_indixes = self.population.kill_closed_players()
+
+            # Ronda de intensificacion para los jugadores revividos
+            self.population.grace_time_for_resurrecteds(resurrected_players_indixes)
+
+
+        #  print("--> Fase 2")
+        #  while evals < self.max_evals():
+        #      # Los jugadores fuera del circulo mueren
+        #      self.population.kill_players_outside_circle()
+
+        #      # Algunos de los jugadores fuera del circulo reviven
+
+        # Devolvemos el mejor jugador
+        return self.population.get_best_player()
