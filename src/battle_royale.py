@@ -47,6 +47,5 @@ class BattleRoyale:
             self.population = Population.random_population(self.number_of_players, self.dimension)
             best_player, cons_evals = self.population.get_best_player()
             evals += cons_evals
-            print("..")
 
         return best_player

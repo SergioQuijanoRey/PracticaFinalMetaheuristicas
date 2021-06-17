@@ -11,12 +11,13 @@ class Player:
 
     def __init__(self, dimension, genes):
         self.dimension = dimension
+        # TODO -- renombrar por position
         self.genes = genes
 
         # Cuando el fitness es None, significa que no lo hemos calculado
         # Cuando el fitness no es None, significa que no lo hemos calculado. Asi que cada vez que
         # mutemos un jugador, debemos anular este valor cacheado
-        self.fitness = None
+        self.fitness_cache = None
 
         if self.is_valid() == False:
             raise Exception("Player.BadInit: new solution is not valid, bad initializing")
@@ -65,20 +66,29 @@ class Player:
         """
 
         # El valor del fitness esta cacheado, no tenemos que recalcularlo
-        if self.fitness is not None:
-            return self.fitness, 0
+        if self.fitness_cache is not None:
+            return self.fitness_cache, 0
 
-        else:
-            self.calculate_fitness()
-            return self.fitness, 1
+        # Calculamos el valor del fitness
+        self.calculate_fitness()
+        return self.fitness_cache, 1
 
     def calculate_fitness(self):
         """Calcula el fitness de este jugador. Para ello, self.fitness no debe estar cacheado"""
 
         # Comprobacion de seguridad
-        if self.fitness is not None:
+        if self.fitness_cache is not None:
             raise Exception("Player.calculate_fitness: self.fitness is not None")
 
         # Realizamos el calculo y lo guardamos
-        self.fitness = api.fitness(self.to_list(), self.dimension)
+        self.fitness_cache = api.fitness(self.to_list(), self.dimension)
+
+
+    def __str__(self):
+        """Para hacer un buen print de estos objetos"""
+        result = ""
+        result += "Player:\n"
+        result += f"\t-> Position: {self.genes} \n"
+        result += f"\t-> Fitness: {self.fitness}"
+        return result
 

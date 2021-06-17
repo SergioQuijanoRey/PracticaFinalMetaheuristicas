@@ -33,9 +33,9 @@ if __name__ == "__main__":
         best_player = mh.run_game()
         dummy_player = mh.dummy_search()
 
-    # Mostramos el error alcanzando
-    err = cec17.fitness(best_player.to_list(), dimension)
-    print(f"Error alcanzado: {err}")
+        # Mostramos el error alcanzando para esta funcion
+        err = cec17.fitness(best_player.to_list(), dimension)
+        print(f"Error alcanzado: {err}")
 
-    dummy_err = cec17.fitness(dummy_player.to_list(), dimension)
-    print(f"Error dummy: {dummy_err}")
+        dummy_err = cec17.fitness(dummy_player.to_list(), dimension)
+        print(f"Error dummy: {dummy_err}")
