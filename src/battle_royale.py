@@ -75,12 +75,29 @@ class BattleRoyale:
             # resucitados consumen su tiempo de gracia
             resurrected_players_indixes = self.population.kill_closed_players(self.max_evals())
 
-        #  print("--> Fase 2")
-        #  while evals < self.max_evals():
-        #      # Los jugadores fuera del circulo mueren
-        #      self.population.kill_players_outside_circle()
+        print("--> Fase 2")
 
-        #      # Algunos de los jugadores fuera del circulo reviven
+        circle_size = Config.init_circle_size
+
+        while ev_counter.get_evals() < self.max_evals():
+            # Los jugadores fuera del circulo mueren
+            # En este proceso, alguno de los jugadores reviven
+            self.population.kill_players_outside_circle(circle_size, self.max_evals())
+
+            # Comprobamos que no hayamos consumido todas las evaluaciones
+            if ev_counter.get_evals() >= self.max_evals():
+                break
+
+            # Los jugadores se mueven algo
+            # TODO -- no iterar sobre todos los jugadores
+            self.population.soft_local_search_over_all_players(self.max_evals())
+
+            # Hacemos mas cerrado el circulo
+            circle_size += Config.circle_step
+
+            # Si solo queda un jugador, paramos de iterar
+            if len(self.population) == 1:
+                break
 
         # Devolvemos el mejor jugador
         return self.population.get_best_player()

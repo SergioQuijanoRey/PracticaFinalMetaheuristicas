@@ -2,7 +2,7 @@ class Config:
     """Clase en la que voy a guardar parametros globales del programa"""
 
     # Poblacion
-    number_of_players = 50
+    number_of_players = 500
 
     # Evaluaciones del fitness que tenemos por cada dimension del problema
     ev_per_dimension = 10_000
@@ -23,3 +23,7 @@ class Config:
     best_player_survives_prob = 0.90
     resurrect_prob = 0.05
     number_of_grace_soft_local_search = 5
+
+    # Cerrado del circulo
+    init_circle_size = 5.0
+    circle_step = -0.1

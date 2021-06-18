@@ -18,6 +18,10 @@ class Population:
         if self.is_valid() == False:
             raise Exception("Population.badInit: new population is not valid, bad initializing")
 
+    def __len__(self):
+        """Tamaño de la poblacion de jugadores"""
+        return len(self.players)
+
     def random_population(number_of_players: int, dimension: int):
         """Genera una poblacion de jugadores inicial, aleatorios"""
 
@@ -179,4 +183,49 @@ class Population:
         """Calcula el porcentaje de jugadores que quedan en la poblacion respecto al numero de jugadores
         inicial"""
         return len(self.players) / Config.number_of_players
+
+    def kill_players_outside_circle(self, circle_size, max_evals):
+        """
+        Los jugadores que quedan fuera del circulo mueren. Algunos de estos pueden resucitar.
+
+        El tamaño del circulo indica el numero de veces por encima que el fitness de un jugador puede
+        estar respecto el fitness del mejor jugador
+        """
+
+        # Comprobacion de seguridad
+        if circle_size < 1.0:
+            circle_size = 1.0
+
+        # Tomamos el mejor jugador y su fitness
+        best_player = self.get_best_player()
+        best_fitness = best_player.fitness()
+
+        # Calculamos los porcentajes respecto a este mejor fitness
+        percentages = [player.fitness() / best_fitness for player in self.players]
+
+        # Calculamos las personas que mueren
+        # Tenemos hacer esto para evitar problemas con indices desactualizados al borrar elementos,
+        # de la lista, y problemas con los rangos
+        killed_players = []
+
+        for idx, player in enumerate(self.players):
+            if percentages[idx] > circle_size:
+                # El jugador muere por estar fuera del circulo. Puede resucitar o no
+                if np.random.uniform() <= Config.resurrect_prob:
+                    # Resucitamos al jugador, por lo que cambia su posicion en el mapa
+                    self.resurrect(idx)
+
+                    # Intensificamos este jugador con su periodo de gracia
+                    self.grace_time_for_resurrecteds([idx], max_evals)
+                else:
+                    killed_players.append(idx)
+
+            # Comprobamos que tengamos mas evaluaciones del fitness
+            if self.ev_counter.get_evals() >= max_evals:
+                break
+
+        # Matamos a los jugadores que deben morir
+        self.kill_players(killed_players)
+
+
 
