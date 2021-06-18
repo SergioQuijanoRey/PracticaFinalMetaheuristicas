@@ -20,7 +20,7 @@ class BattleRoyale:
         - Jugadores muriendo por el cierre del circulo
         - Jugadores reviviendo en partes aleatorias del mapa
 
-    En la version memetica introduciremos la busqueda local soletis, que es mucho mas fuerte, y por
+    En la version memetica introduciremos la busqueda local solis, que es mucho mas fuerte, y por
     tanto en ese caso la busqueda local si que cobrara una importancia notable
     """
 
@@ -48,7 +48,8 @@ class BattleRoyale:
 
 
     def run_game(self):
-        """Comienza una partida y devuelve al jugador ganador.
+        """
+        Comienza una partida y devuelve al jugador ganador.
 
         Returns:
         ========

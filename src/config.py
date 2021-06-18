@@ -1,6 +1,10 @@
 class Config:
     """Clase en la que voy a guardar parametros globales del programa"""
 
+    # Rangos de las funciones
+    lower_range = -100
+    upper_range = 100
+
     # Poblacion
     number_of_players = 500
 
@@ -27,3 +31,7 @@ class Config:
     # Cerrado del circulo
     init_circle_size = 5.0
     circle_step = -0.1
+
+    # Busqueda fuerte
+    max_evals_hard_local_search = 100
+    delta = step_size

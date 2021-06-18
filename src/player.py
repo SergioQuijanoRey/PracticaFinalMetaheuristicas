@@ -2,11 +2,7 @@ import cec17 as api
 import numpy as np
 from config import Config
 from evals_counter import EvalsCounter
-
-# Constantes asociadas a las funciones con las que trabajamos
-#===============================================================================
-lower_range = -100
-upper_range = 100
+import solis
 
 class Player:
     """Clase que representa un jugador (solucion) al problema considerado"""
@@ -27,7 +23,7 @@ class Player:
 
     def random_player(dimension):
         """Genera un jugador en una posicion aleatoria"""
-        position = np.random.randint(lower_range, upper_range, dimension)
+        position = np.random.randint(Config.lower_range, Config.upper_range, dimension)
         rand_player = Player(dimension, position)
         return rand_player
 
@@ -46,7 +42,7 @@ class Player:
 
         # La posicion esta en un rago valido
         for coordinate in self.position:
-            if coordinate < lower_range or coordinate > upper_range:
+            if coordinate < Config.lower_range or coordinate > Config.upper_range:
                 return False
 
         # Todas las comprobaciones han sido superadas
@@ -134,6 +130,42 @@ class Player:
         # Notar que no tenemos que invalidar la cache. best_player ha calculado su fitness
         # correspondiente, que es el que tomamos ahora como nuestro
         self = best_player
+
+    def hard_local_search(self, max_evals):
+        """
+        Aplicamos una busqueda local fuerte sobre este jugador
+
+        Parameters:
+        ===========
+        max_evals: las evaluaciones del fitness maximas
+        """
+
+        # Tomamos el minimo entre estos dos maximos de evaluaciones
+        max_local_evals = min(Config.max_evals_hard_local_search, max_evals - self.ev_counter.get_evals())
+
+        # Corremos esta busqueda local fuerte
+        result, _ = self.position = solis.soliswets(
+            # Usamos una lambda para seguir el formato de funcion que espera solis
+            # Necesita una funcion que dadas unas coordenadas, devuelva el fitness. Como necesitamos
+            # pasar la dimension, la fijamos usando una closure
+            lambda coordinates: api.fitness(coordinates, self.dimension),
+
+            self.position,
+            self.fitness(),
+            Config.lower_range,
+            Config.upper_range,
+            max_local_evals,
+            np.full(self.dimension, Config.delta)
+        )
+
+        # Tomamos los resultados de la busqueda local
+        self.position = result.solution
+        self.fitness_cache = result.fitness
+
+        # Aumentamos las iteraciones consumidas, porque solis no hace que aumenten pues usa directamente
+        # la funcion de api.fitness
+        self.ev_counter.add_evals(result.evaluations)
+
 
     def invalidate_cache(self):
         """Se invalida la cache del fitness"""
