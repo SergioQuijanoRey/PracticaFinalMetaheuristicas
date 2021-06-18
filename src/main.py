@@ -13,7 +13,7 @@ def get_program_parameters():
         show_help()
         exit(-1)
 
-    return sys.argv[1]
+    return int(sys.argv[1])
 
 def show_help():
     """Mostramos como se usa en programa"""
@@ -26,10 +26,6 @@ if __name__ == "__main__":
 
     print("==> Inicializamos la semilla aleatoria")
     np.random.seed(123456789)
-
-    # Dimension del problema con el que trabajamos
-    # TODO -- introducir la dimension por parametro de consola
-    dimension = 10
 
     # Lanzamos todas las funciones
     for function_id in range(1, 31):
