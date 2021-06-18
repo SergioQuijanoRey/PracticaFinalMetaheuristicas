@@ -30,7 +30,7 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
 
 # TODOs
 
-* [ ] Elegir el número de jugadores en función a la dimensión con la que estemos trabajando
+* [x] Elegir el número de jugadores en función a la dimensión con la que estemos trabajando
 * [ ] En la memoria, proponer como mejora ir descendiendo el step size
 * [ ] En la memoria, poner que solo pelea un jugador contra los jugadores mas cercanos. Esta modificacion es para que no mueran demasiado rapido los jugadores
 * [ ] En la memoria, comentar que el primer jugador en kill_closed_players es mas probable que muera
