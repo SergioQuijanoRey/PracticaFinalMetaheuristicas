@@ -1,62 +1,26 @@
-import numpy as np
-import cec17 as api
-from population import Population
-from player import Player
-from config import Config
-from evals_counter import EvalsCounter
-import utils
+from battle_royale import BattleRoyale
 
-class BattleRoyale:
+class BattleRoyaleMemetic(BattleRoyale):
     """
-    Clase que representa la metaheuristica que desarrollamos.
+    Incluiremos una mejora memetica en la que usaremos la busqueda local soletis para la hibridacion
 
-    Es necesario que antes de usar esta clase se haya fijado la funcion con la que trabajamos con
-    la funcion cec17.init
+    Notar que inicialmente estabamos usando una busqueda local muy suave para hacer que los jugadores
+    se moviesen por el mapa. Pero sin caer exactamente en un modelo que se basase fuertemente en la
+    busqueda local, sino que nos basabamos mas en el mecanismo de jugadores matandose, jugadores muriendo
+    por el cerrado del circulo y jugadores resucitando para dar variedad a la poblacion
 
-    Notar que estamos usando una busqueda local muy suave, para hacer que los jugadores se muevan
-    algo por el mapa. Sin embargo, no es una parte fundamental del algoritmo. Las partes fundamentales
-    son los siguientes mecanismos:
-        - Jugadores matandose entre si
-        - Jugadores muriendo por el cierre del circulo
-        - Jugadores reviviendo en partes aleatorias del mapa
-
-    En la version memetica introduciremos la busqueda local soletis, que es mucho mas fuerte, y por
-    tanto en ese caso la busqueda local si que cobrara una importancia notable
+    Solo tenemos que modifcar el metodo que corre la partida
     """
-
-    def __init__(self, dimension, number_of_players):
-        self.dimension = dimension
-        self.population = None
-        self.number_of_players = number_of_players
-
-    def dummy_search(self):
-        """Devuelve un jugador aleatorio.
-        Con fines de debuggear nuestro codigo
-        """
-        best_solution = Player.random_player(self.dimension)
-
-        evals = 0
-        while evals < self.dimension * self.ev_per_dimension:
-            evals += 1000
-        print("")
-
-        return best_solution
-
-    def max_evals(self):
-        """Calcula el maximo de evaluaciones del fitness que se pueden consumir"""
-        return self.dimension * Config.ev_per_dimension
-
-
     def run_game(self):
-        """Comienza una partida y devuelve al jugador ganador.
+        """
+        Comienza una partida y devuelve al jugador ganador.
 
         Returns:
         ========
         best_player: el jugador que gana la partida
-
-        TODO -- borrar los mensajes por pantalla porque pueden relantecer la ejecucion
         """
 
+        # TODO -- borrar los mensajes por pantalla porque pueden relantecer la ejecucion
         # Controlamos las evaluaciones que nos quedan
         ev_counter = EvalsCounter()
         ev_counter.reset()

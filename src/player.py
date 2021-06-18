@@ -13,7 +13,6 @@ class Player:
 
     def __init__(self, dimension, position):
         self.dimension = dimension
-        # TODO -- renombrar por position
         self.position = position
 
         # Cuando el fitness es None, significa que no lo hemos calculado
