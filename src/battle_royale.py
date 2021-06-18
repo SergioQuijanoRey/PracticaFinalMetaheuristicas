@@ -64,12 +64,16 @@ class BattleRoyale:
         while pase1_condition():
 
             # Aplicamos una busqueda suave sobre cada jugador
-            self.population.soft_local_search_over_all_players()
+            self.population.soft_local_search_over_all_players(self.max_evals())
+
+            # Si hemos agotado las iteraciones, paramos
+            if ev_counter.get_evals() >= self.max_evals():
+                break
 
             # Ronda de asesinatos entre jugadores iniciales
             # En el proceso, algunos jugadores mueren y resucitan. En esta funcion, estos jugadores
             # resucitados consumen su tiempo de gracia
-            resurrected_players_indixes = self.population.kill_closed_players()
+            resurrected_players_indixes = self.population.kill_closed_players(self.max_evals())
 
         #  print("--> Fase 2")
         #  while evals < self.max_evals():

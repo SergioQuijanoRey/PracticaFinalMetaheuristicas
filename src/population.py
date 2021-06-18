@@ -1,6 +1,7 @@
 from player import Player
 import utils
 from config import Config
+from evals_counter import EvalsCounter
 
 import numpy as np
 
@@ -12,6 +13,7 @@ class Population:
         self.number_of_players = number_of_players
         self.players = players
         self.dimension = dimension
+        self.ev_counter = EvalsCounter()
 
         if self.is_valid() == False:
             raise Exception("Population.badInit: new population is not valid, bad initializing")
@@ -69,14 +71,18 @@ class Population:
         # Devolvemos el mejor jugador que hemos encontrado
         return best_player
 
-    def soft_local_search_over_all_players(self):
+    def soft_local_search_over_all_players(self, max_evals):
         """Aplica una busqueda local suave a todos los jugadores de la poblacion"""
 
-        # TODO -- hay que comprobar que no hayamos agotado todas las iteraciones
         for player in self.players:
-            player.soft_local_search()
+            # Comprobamos que no hayamos agotado todas las iteraciones
+            if self.ev_counter.get_evals() >= max_evals:
+                break
 
-    def kill_closed_players(self):
+            player.soft_local_search(max_evals)
+
+
+    def kill_closed_players(self, max_evals):
         """En cada ronda los jugadores pelean entre si. Se selecciona un jugador de forma aleatoria
         y este pelea contra un numero fijado en Config de jugadores mas cercanos a el. En el proceso,
         algunos jugadores reviven y consumen su tiempo de gracia
@@ -119,7 +125,7 @@ class Population:
                 self.resurrect(died_player_index)
 
                 # Intensificamos este jugador con su periodo de gracia
-                self.grace_time_for_resurrecteds([died_player_index])
+                self.grace_time_for_resurrecteds([died_player_index], max_evals)
             else:
                 players_to_kill.append(died_player_index)
 
@@ -154,7 +160,7 @@ class Population:
         directamente se modifica la posicion del jugador"""
         self.players[index] = Player.random_player(self.dimension)
 
-    def grace_time_for_resurrecteds(self, resurrected_players_indixes):
+    def grace_time_for_resurrecteds(self, resurrected_players_indixes, max_evals):
         """
         Intensifica a los jugadores que han muerto y que han resucitado, para que puedan ser
         competitivos con el resto de jugadores
@@ -167,7 +173,7 @@ class Population:
         """
         for index in resurrected_players_indixes:
             for _ in range(Config.number_of_grace_soft_local_search):
-                self.players[index].soft_local_search()
+                self.players[index].soft_local_search(max_evals)
 
     def remaining_players(self):
         """Calcula el porcentaje de jugadores que quedan en la poblacion respecto al numero de jugadores

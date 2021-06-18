@@ -90,14 +90,12 @@ class Player:
         # Realizamos el calculo y lo guardamos
         self.fitness_cache = api.fitness(self.to_list(), self.dimension)
 
-    def soft_local_search(self):
+    def soft_local_search(self, max_evals):
         """Aplica una busqueda local suave, lo que hace que el jugador se mueva a una posicion mejor.
 
         La busqueda local suave considerada genera un numero determinado en Config de posiciones a
         modificar. Se considera un cambio aleatorio positivo y otro negativo, en el rango [0, alpha]
         donde alpha se determina en Config
-
-        TODO -- llevar la cuenta de las iteraciones consumidas
         """
 
         best_player = self
@@ -128,6 +126,10 @@ class Player:
             if new_pla_fit < best_fitness:
                 best_player = new_player
                 best_fitnes = new_pla_fit
+
+            # Comprobamos si tenemos que parar de buscar por haber agotado las iteraciones
+            if self.ev_counter.get_evals() >= max_evals:
+                break
 
         # Hacemos el cambio mas optimo
         # Notar que no tenemos que invalidar la cache. best_player ha calculado su fitness
