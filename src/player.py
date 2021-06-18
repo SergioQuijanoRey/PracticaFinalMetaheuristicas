@@ -77,7 +77,7 @@ class Player:
         # Aumentamos las evaluaciones consumidas
         self.ev_counter.add_evals(1)
         self.calculate_fitness()
-        return self.fitness_cache,
+        return self.fitness_cache
 
     def calculate_fitness(self):
         """Calcula el fitness de este jugador. Para ello, self.fitness no debe estar cacheado"""
@@ -88,6 +88,9 @@ class Player:
 
         # Realizamos el calculo y lo guardamos
         self.fitness_cache = api.fitness(self.to_list(), self.dimension)
+
+        if type(self.fitness_cache) is tuple or type(self.fitness_cache) is list:
+            raise Exception("Player.calculate_fitness: fitness obtained is a tuple")
 
     def soft_local_search(self):
         """Aplica una busqueda local suave, lo que hace que el jugador se mueva a una posicion mejor.
@@ -100,6 +103,8 @@ class Player:
         """
 
         best_player = self
+        best_fitness = self.fitness()
+
         for _ in range(Config.tries_in_local_search):
             # Posicion y valor de variacion de la coordenada
             position = np.random.randint(0, len(self.genes))
@@ -121,8 +126,10 @@ class Player:
                 continue
 
             # Comprobamos si es mejor que el mejor jugador hasta el momento
-            if new_player.fitness() < best_player.fitness():
+            new_pla_fit = new_player.fitness()
+            if new_pla_fit < best_fitness:
                 best_player = new_player
+                best_fitnes = new_pla_fit
 
         # Hacemos el cambio mas optimo
         # Notar que no tenemos que invalidar la cache. best_player ha calculado su fitness
@@ -139,7 +146,7 @@ class Player:
         result = ""
         result += "Player:\n"
         result += f"\t-> Position: {self.genes} \n"
-        result += f"\t-> Fitness: {self.fitness}"
+        result += f"\t-> Fitness: {self.fitness_cache}"
         return result
 
 

@@ -3,7 +3,6 @@ import cec17
 from battle_royale import BattleRoyale
 from player import Player
 from config import Config
-from evals_counter import EvalsCounter
 
 if __name__ == "__main__":
     print("==> Inicializamos la semilla aleatoria")
@@ -12,14 +11,8 @@ if __name__ == "__main__":
     # Dimension del problema con el que trabajamos
     dimension = 10
 
-    # Para llevar la cuenta de las evaluaciones consumidas
-    ev_counter = EvalsCounter()
-
     # Lanzamos todas las funciones
     for function_id in range(1, 31):
-        # Evaluaciones del fitness consumidas hasta el momento
-        ev_counter.reset()
-
         # Fijamos la funcion a utilizar en esta iteracion
         # Con ello, el resto de llamadas cec17 usan los datos de la funcion especificada (en particular,
         # el fitness)

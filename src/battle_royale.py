@@ -44,11 +44,9 @@ class BattleRoyale:
         TODO -- borrar los mensajes por pantalla porque pueden relantecer la ejecucion
         """
 
-        # Parametros iniciales
-        best_player = None
-
         # Controlamos las evaluaciones que nos quedan
         ev_counter = EvalsCounter()
+        ev_counter.reset()
 
         print("--> Fase inicial: generando jugadores en posiciones aleatorias")
         self.population = Population.random_population(self.number_of_players, self.dimension)

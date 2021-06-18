@@ -44,7 +44,7 @@ class Population:
         return True
 
     def get_best_player(self):
-        """Devuelve el mejor jugador de esta poblacion, junto a las evaluaciones del fitness que se consumen"""
+        """Devuelve el mejor jugador de esta poblacion"""
 
         # Comprobacion de seguridad
         # TODO -- no llamar a esta funcion en la version final porque hace que vaya mas lento
@@ -53,20 +53,18 @@ class Population:
 
         # Partimos de un mejor jugador inicial
         best_player = self.players[0]
-        best_fit, ev_cons = best_player.fitness()
-        fit_ev_cons = ev_cons
+        best_fit = best_player.fitness()
 
         # Iteramos sobre todos los jugadores
         for player in self.players:
-            curr_fit, ev_cons = player.fitness()
-            fit_ev_cons += ev_cons
+            curr_fit = player.fitness()
 
             if curr_fit < best_fit:
                 best_player = player
                 best_fit = curr_fit
 
-        # Devolvemos el mejor jugador que hemos encontrado, y las iteraciones consumidas
-        return best_player, fit_ev_cons
+        # Devolvemos el mejor jugador que hemos encontrado
+        return best_player
 
     def soft_local_search_over_all_players(self):
         """Aplica una busqueda local suave a todos los jugadores de la poblacion"""
