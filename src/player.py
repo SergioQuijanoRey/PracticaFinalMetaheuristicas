@@ -74,8 +74,6 @@ class Player:
             return self.fitness_cache
 
         # Calculamos el valor del fitness
-        # Aumentamos las evaluaciones consumidas
-        self.ev_counter.add_evals(1)
         self.calculate_fitness()
         return self.fitness_cache
 
@@ -86,11 +84,11 @@ class Player:
         if self.fitness_cache is not None:
             raise Exception("Player.calculate_fitness: self.fitness is not None")
 
+        # Aumentamos las evaluaciones consumidas
+        self.ev_counter.add_evals(1)
+
         # Realizamos el calculo y lo guardamos
         self.fitness_cache = api.fitness(self.to_list(), self.dimension)
-
-        if type(self.fitness_cache) is tuple or type(self.fitness_cache) is list:
-            raise Exception("Player.calculate_fitness: fitness obtained is a tuple")
 
     def soft_local_search(self):
         """Aplica una busqueda local suave, lo que hace que el jugador se mueva a una posicion mejor.
