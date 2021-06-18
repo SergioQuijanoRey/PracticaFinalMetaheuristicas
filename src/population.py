@@ -2,6 +2,8 @@ from player import Player
 import utils
 from config import Config
 
+import numpy as np
+
 class Population:
     """Representa una poblacion de jugadores (soluciones)"""
 
@@ -80,38 +82,48 @@ class Population:
         algunos jugadores reviven y consumen su tiempo de gracia
         """
 
-        # Jugadores que deben revivir
-        # No revivimos a los jugadores dentro del bucle para no tener problemas con los indices
-        # fuear de rango
-        resurrected_players_indixes = []
-
         # No matamos a los jugadores dentro del bucle para no tener problemas con los indices fuera
         # de rango
         players_to_kill = []
 
-        for first_index, first_player in enumerate(self.players):
-            for second_index, second_player in enumerate(self.players):
-                # TODO -- esto hacerlo mas eficiente
-                if second_index >= first_index:
-                    continue
+        # Elegimos el primer jugador con el que vamos a pelear
+        first_player_index = np.random.choice([x for x in range(len(self.players))])
+        first_player = self.players[first_player_index]
 
-                if first_player != second_player and Player.distance(first_player, second_player) < Config.player_radius_vision:
-                    # Hacemos que peleen
-                    died_player_index, should_resurrect = Player.fight(first_player, second_player, first_index, second_index)
+        # Guardamos las distancias a este jugador
+        distances_to_first_player = [
+            Player.distance(first_player, player)
+            for player in self.players
+            if player != first_player
+        ]
 
-                    if should_resurrect:
-                        # Añadimos el indice a los jugadores qwue deben resucitar
-                        resurrected_players_indixes.append(died_player_index)
-                    else:
-                        # Añadimos a la lista de jugadores a borrar
-                        players_to_kill.append(died_player_index)
+        # Tomamos los indices ordenados por estas distancias
+        # Consideramos solo un numero de competidores segun un parametro de Config
+        ordered_indexes = np.argsort(distances_to_first_player)[:Config.players_to_compete]
 
-        # Resucitamos a los jugadores
-        for resurrected_player in resurrected_players_indixes:
-            self.resurrect(resurrected_player)
+        # El jugador compite contra estos jugadores
+        for second_index in ordered_indexes:
+            # Tomamos el segundo jugador
+            second_player = self.players[second_index]
 
-        # Periodo de gracia para los jugadores resucitados
-        self.grace_time_for_resurrecteds(resurrected_players_indixes)
+            # Hacemos que peleen
+            died_player_index, should_resurrect = Player.fight(first_player, second_player, first_player_index, second_index)
+
+            # El jugador ha resucitado
+            if should_resurrect is True:
+                # Reaparece en una posicion aleatoria del mapa
+                self.resurrect(died_player_index)
+
+                # Intensificamos este jugador con su periodo de gracia
+                self.grace_time_for_resurrecteds([died_player_index])
+            else:
+                players_to_kill.append(died_player_index)
+
+
+            # El jugador que muere es el primero y no resucita
+            # No podemos hacer que los otros jugadores sigan compitiendo contra un jugador muerto
+            if died_player_index == first_player_index and should_resurrect == False:
+                break
 
         # Matamos a los jugadores que deben morir
         self.kill_players(players_to_kill)

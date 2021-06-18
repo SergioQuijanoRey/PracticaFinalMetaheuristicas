@@ -19,6 +19,7 @@ class Config:
 
     # Peleas de jugadores
     player_radius_vision = 1000
+    players_to_compete = 4
     best_player_survives_prob = 0.90
     resurrect_prob = 0.05
     number_of_grace_soft_local_search = 5
