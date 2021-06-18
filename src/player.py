@@ -140,11 +140,12 @@ class Player:
         """Se invalida la cache del fitness"""
         self.fitness = None
 
+    # TODO -- testear porque es sencillo y critico
     def distance(first_player, second_player):
         """Devuelve la distancia entre dos jugadores.
         Estamos usando la distancia manhattan por temas de eficiencia
         """
-        return np.sum(first_player.genes - second_player.genes)
+        return np.sum(np.abs(first_player.genes - second_player.genes))
 
     def fight(first_player, second_player, first_index, second_index):
         """Dos jugadores pelean, uno de los dos mueren
@@ -181,6 +182,10 @@ class Player:
             should_resurrect = False
 
         return died_player_index, should_resurrect
+
+    def sees(self, other_player) -> bool:
+        """Comprueba si otro jugador esta en el radio de vision de este jugador"""
+        return Player.distance(self, other_player) <= Config.player_radius_vision_per_dimension * self.dimension
 
 
     def __str__(self):

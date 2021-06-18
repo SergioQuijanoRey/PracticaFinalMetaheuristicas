@@ -101,10 +101,16 @@ class Population:
         # Consideramos solo un numero de competidores segun un parametro de Config
         ordered_indexes = np.argsort(distances_to_first_player)[:Config.players_to_compete]
 
+        print(f"TODO -- {[distances_to_first_player[x] for x in ordered_indexes]}")
+
         # El jugador compite contra estos jugadores
         for second_index in ordered_indexes:
             # Tomamos el segundo jugador
             second_player = self.players[second_index]
+
+            # Deben estar en el radio de vision
+            if first_player.sees(second_player) == False:
+                continue
 
             # Hacemos que peleen
             died_player_index, should_resurrect = Player.fight(first_player, second_player, first_player_index, second_index)

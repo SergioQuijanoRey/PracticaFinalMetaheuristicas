@@ -18,7 +18,7 @@ class Config:
     step_size = 10.0
 
     # Peleas de jugadores
-    player_radius_vision = 1000
+    player_radius_vision_per_dimension = 50
     players_to_compete = 4
     best_player_survives_prob = 0.90
     resurrect_prob = 0.05
