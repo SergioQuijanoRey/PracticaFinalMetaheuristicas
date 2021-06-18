@@ -3,12 +3,32 @@ import cec17
 from battle_royale import BattleRoyale
 from player import Player
 from config import Config
+import sys
+
+def get_program_parameters():
+    """Toma los parametros de entrada por linea de comandos"""
+
+    if len(sys.argv) != 2:
+        print("Parametros de entrada invalidos")
+        show_help()
+        exit(-1)
+
+    return sys.argv[1]
+
+def show_help():
+    """Mostramos como se usa en programa"""
+    print("Modo de uso:")
+    print("\tpython3 main.py <dimension>")
 
 if __name__ == "__main__":
+    # Tomamos los parametros por linea de comandos
+    dimension = get_program_parameters()
+
     print("==> Inicializamos la semilla aleatoria")
     np.random.seed(123456789)
 
     # Dimension del problema con el que trabajamos
+    # TODO -- introducir la dimension por parametro de consola
     dimension = 10
 
     # Lanzamos todas las funciones
