@@ -11,10 +11,10 @@ upper_range = 100
 class Player:
     """Clase que representa un jugador (solucion) al problema considerado"""
 
-    def __init__(self, dimension, genes):
+    def __init__(self, dimension, position):
         self.dimension = dimension
         # TODO -- renombrar por position
-        self.genes = genes
+        self.position = position
 
         # Cuando el fitness es None, significa que no lo hemos calculado
         # Cuando el fitness no es None, significa que no lo hemos calculado. Asi que cada vez que
@@ -27,9 +27,9 @@ class Player:
             raise Exception("Player.BadInit: new solution is not valid, bad initializing")
 
     def random_player(dimension):
-        """Genera un jugador con genes aleatorios"""
-        genes = np.random.randint(lower_range, upper_range, dimension)
-        rand_player = Player(dimension, genes)
+        """Genera un jugador en una posicion aleatoria"""
+        position = np.random.randint(lower_range, upper_range, dimension)
+        rand_player = Player(dimension, position)
         return rand_player
 
     def is_valid(self):
@@ -42,12 +42,12 @@ class Player:
         """
 
         # El tamaño del vector solucion debe coincidir con el tamaño especificado
-        if len(self.genes) != self.dimension:
+        if len(self.position) != self.dimension:
             return False
 
-        # Los genes estan en el rango permitido para las funciones con las que trabajamos
-        for gene in self.genes:
-            if gene < lower_range or gene > upper_range:
+        # La posicion esta en un rago valido
+        for coordinate in self.position:
+            if coordinate < lower_range or coordinate > upper_range:
                 return False
 
         # Todas las comprobaciones han sido superadas
@@ -58,7 +58,7 @@ class Player:
         Convierte el jugador en una lista de python, para poder ser usada en funciones de la api que
         nos dan los profesores de practicas.
         """
-        return self.genes.tolist()
+        return self.position.tolist()
 
     def fitness(self):
         """Devuelve el fitness asociado a este jugador.
@@ -103,13 +103,13 @@ class Player:
 
         for _ in range(Config.tries_in_local_search):
             # Posicion y valor de variacion de la coordenada
-            position = np.random.randint(0, len(self.genes))
+            position = np.random.randint(0, len(self.position))
             delta = np.random.uniform(-Config.step_size, Config.step_size)
 
-            # Modificamos los genes
+            # Modificamos la posicion
             # TODO -- es necesario hacer copy() ??
-            new_genes = self.genes.copy()
-            new_genes[position] = new_genes[position] + delta
+            new_position = self.position.copy()
+            new_position[position] = new_position[position] + delta
 
             # Generamos el nuevo jugador
             # Si el jugador no es valido, lo ignoramos
@@ -117,7 +117,7 @@ class Player:
             # al borde
             new_player = None
             try:
-                new_player = Player(self.dimension, new_genes)
+                new_player = Player(self.dimension, new_position)
             except:
                 continue
 
@@ -145,7 +145,7 @@ class Player:
         """Devuelve la distancia entre dos jugadores.
         Estamos usando la distancia manhattan por temas de eficiencia
         """
-        return np.sum(np.abs(first_player.genes - second_player.genes))
+        return np.sum(np.abs(first_player.position - second_player.position))
 
     def fight(first_player, second_player, first_index, second_index):
         """Dos jugadores pelean, uno de los dos mueren
@@ -192,7 +192,7 @@ class Player:
         """Para hacer un buen print de estos objetos"""
         result = ""
         result += "Player:\n"
-        result += f"\t-> Position: {self.genes} \n"
+        result += f"\t-> Position: {self.position} \n"
         result += f"\t-> Fitness: {self.fitness_cache}"
         return result
 
