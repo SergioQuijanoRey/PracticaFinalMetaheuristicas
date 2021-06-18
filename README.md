@@ -32,6 +32,10 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
 
 * [ ] Elegir el número de jugadores en función a la dimensión con la que estemos trabajando
 * [ ] En la memoria, proponer como mejora ir descendiendo el step size
+* [ ] En la memoria, poner que solo pelea un jugador contra los jugadores mas cercanos. Esta modificacion es para que no mueran demasiado rapido los jugadores
+* [ ] En la memoria, comentar que el primer jugador en kill_closed_players es mas probable que muera
+* [ ] En la memoria, comentar el número de jugadores revividos que consiguen acabar siendo competitivos
+* [ ] En la memoria, comentar que tenemos demasiados parametros que fijar. Seria interesante tener parámetros autoadaptativos
 
 # Algoritmo
 
@@ -43,4 +47,5 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
     3.3. Ronda de intensificación para los revividos en esta ronda
 4. Mientras no hayamos acabado, Fase 2
     4.1. Opt 1: Seleccionamos aleatoriamente grupos de k jugadores y eliminamos al peor de cada grupo
-    4.1. Opt 2: Eliminamos a los peores individuos de la poblacion, todavia con probabilidad de revivir
+    4.2. Opt 2: Eliminamos a los peores individuos de la poblacion, todavia con probabilidad de revivir
+    4.3. Opt 3: Eliminamos a los peores individuos de la poblacion, que queden por encima de un porcentaje del mejor fitness
