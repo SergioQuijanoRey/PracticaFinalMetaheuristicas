@@ -3,3 +3,18 @@
 *.c.o.d
 *.cc.o
 *.cc.o.d
+
+/* Ignoramos la carpeta de build de CMake*/
+./src/CMakeFiles/**
+/src/CMakeFiles/cec17_test_func.dir/compiler_depend.make
+/src/CMakeFiles/test.dir/compiler_depend.make
+/src/CMakeFiles/testrandom.dir/compiler_depend.make
+/src/CMakeFiles/testsolis.dir/compiler_depend.make
+/src/CMakeFiles/cec17_test_func.dir/compiler_depend.internal
+/src/CMakeFiles/test.dir/compiler_depend.internal
+/src/CMakeFiles/testrandom.dir/compiler_depend.internal
+/src/CMakeFiles/testsolis.dir/compiler_depend.internal
+/src/CMakeFiles/cec17_test_func.dir/compiler_depend.make
+/src/CMakeFiles/test.dir/compiler_depend.make
+/src/CMakeFiles/testrandom.dir/compiler_depend.make
+/src/CMakeFiles/testsolis.dir/compiler_depend.make
