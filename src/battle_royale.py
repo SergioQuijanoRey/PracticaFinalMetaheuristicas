@@ -55,27 +55,21 @@ class BattleRoyale:
         print("--> Fase 1")
 
         # Condiciones para permanecer en la fase 1 de la partida
-        phase1_iterations_cond = ev_counter.get_evals() < self.max_evals() * Config.phase1_percentage
-        phase1_number_of_players_cond = self.population.remaining_players() >= Config.phase1_players_percentage
-        pase1_condition = phase1_iterations_cond and phase1_number_of_players_cond
+        # Escribimos las condiciones en lambdas para mayor expresividad y para que en cada iteracion
+        # del bucle se vuelva a comprobar la condicion
+        phase1_iterations_cond = lambda: ev_counter.get_evals() < self.max_evals() * Config.phase1_percentage
+        phase1_number_of_players_cond = lambda:  self.population.remaining_players() >= Config.phase1_players_percentage
+        pase1_condition = lambda: phase1_iterations_cond() and phase1_number_of_players_cond()
 
-        while pase1_condition:
+        while pase1_condition():
 
-            print("TODO -- busqueda local sobre todos los jugadores")
             # Aplicamos una busqueda suave sobre cada jugador
             self.population.soft_local_search_over_all_players()
 
-            print("TODO -- matamos jugadores cercanos")
             # Ronda de asesinatos entre jugadores iniciales
             # En el proceso, algunos jugadores mueren y resucitan. En esta funcion, estos jugadores
             # resucitados consumen su tiempo de gracia
             resurrected_players_indixes = self.population.kill_closed_players()
-
-            print(f"TODO -- Hemos consumido {ev_counter.get_evals()} iteraciones")
-            print(f"TODO -- tenemos una poblacion de {len(self.population.players)} jugadores")
-            utils.wait_for_user_input()
-
-
 
         #  print("--> Fase 2")
         #  while evals < self.max_evals():
@@ -84,6 +78,5 @@ class BattleRoyale:
 
         #      # Algunos de los jugadores fuera del circulo reviven
 
-        print("TODO -- acabada la partida")
         # Devolvemos el mejor jugador
         return self.population.get_best_player()

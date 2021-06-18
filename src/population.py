@@ -101,8 +101,6 @@ class Population:
         # Consideramos solo un numero de competidores segun un parametro de Config
         ordered_indexes = np.argsort(distances_to_first_player)[:Config.players_to_compete]
 
-        print(f"TODO -- {[distances_to_first_player[x] for x in ordered_indexes]}")
-
         # El jugador compite contra estos jugadores
         for second_index in ordered_indexes:
             # Tomamos el segundo jugador
