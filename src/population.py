@@ -75,14 +75,9 @@ class Population:
             player.soft_local_search()
 
     def kill_closed_players(self):
-        """Los jugadores que estan cerca unos de otros luchan
-
-        Returns:
-        ========
-        resurrected_players_indixes: indices en la poblacion de los jugadores que han muerto y que
-                                     han resucitado
-
-        TODO -- da problemas a la hora de matar a los jugadores porque se va moviendo la lista
+        """En cada ronda los jugadores pelean entre si. Se selecciona un jugador de forma aleatoria
+        y este pelea contra un numero fijado en Config de jugadores mas cercanos a el. En el proceso,
+        algunos jugadores reviven y consumen su tiempo de gracia
         """
 
         # Jugadores que deben revivir
@@ -96,6 +91,10 @@ class Population:
 
         for first_index, first_player in enumerate(self.players):
             for second_index, second_player in enumerate(self.players):
+                # TODO -- esto hacerlo mas eficiente
+                if second_index >= first_index:
+                    continue
+
                 if first_player != second_player and Player.distance(first_player, second_player) < Config.player_radius_vision:
                     # Hacemos que peleen
                     died_player_index, should_resurrect = Player.fight(first_player, second_player, first_index, second_index)
@@ -111,17 +110,29 @@ class Population:
         for resurrected_player in resurrected_players_indixes:
             self.resurrect(resurrected_player)
 
+        # Periodo de gracia para los jugadores resucitados
+        self.grace_time_for_resurrecteds(resurrected_players_indixes)
+
         # Matamos a los jugadores que deben morir
-        for died_player in players_to_kill:
-            self.kill_player(died_player)
+        self.kill_players(players_to_kill)
 
-        return resurrected_players_indixes
+    # TODO -- testear esto porque tengo dudas y puede ser critico en los algoritmos
+    def kill_players(self, indexes):
+        """Mata a un conjunto de jugadores, dados los indices de estos. Esto se hace en conjunto, pues
+        ir matando jugador a jugador provoca que los indices de la lista se muevan y tengamos problemas
+        tanto de logica como de indices fuera del rango adecuado"""
 
-    def kill_player(self, index):
-        """Mata a un jugador, borrandolo de la poblacion de jugadores"""
-        print(f"TODO -- queremos eliminar el indice {index}, tenemos {len(self.players)} jugadores")
-        self.players.pop(index)
+        # Primero hacemos que los jugadores muertos sean None, para marcarlos sin reducir la lista
+        for dead_index in indexes:
+            self.players[dead_index] = None
 
+        # Borramos los jugadores que sean None
+        self.players = [player for player in self.players if player is not None]
+
+        # Reducimos el tamaño de la poblacion
+        self.number_of_players = self.number_of_players - len(indexes)
+
+    # TODO -- testear porque tengo dudas y puede ser critico
     def resurrect(self, index):
         """Resucita un jugador muerto. No lo elimina de la lista y lo vuelve a meter modificado,
         directamente se modifica la posicion del jugador"""
@@ -132,8 +143,18 @@ class Population:
         Intensifica a los jugadores que han muerto y que han resucitado, para que puedan ser
         competitivos con el resto de jugadores
 
+        TODO -- hacer una busqueda local dura mas inteligente
+
         Parameters:
         ===========
         resurrected_players_indixes: indices en la poblacion de los jugadores que han resucitado
         """
-        pass
+        for index in resurrected_players_indixes:
+            for _ in range(Config.number_of_grace_soft_local_search):
+                self.players[index].soft_local_search()
+
+    def remaining_players(self):
+        """Calcula el porcentaje de jugadores que quedan en la poblacion respecto al numero de jugadores
+        inicial"""
+        return len(self.players) / Config.number_of_players
+
