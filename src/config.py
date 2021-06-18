@@ -13,3 +13,8 @@ class Config:
     # Busqueda local suave
     tries_in_local_search = 2
     step_size = 10.0
+
+    # Peleas de jugadores
+    player_radius_vision = 1000
+    best_player_survives_prob = 0.90
+    resurrect_prob = 0.05

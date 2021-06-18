@@ -140,6 +140,48 @@ class Player:
         """Se invalida la cache del fitness"""
         self.fitness = None
 
+    def distance(first_player, second_player):
+        """Devuelve la distancia entre dos jugadores.
+        Estamos usando la distancia manhattan por temas de eficiencia
+        """
+        return np.sum(first_player.genes - second_player.genes)
+
+    def fight(first_player, second_player, first_index, second_index):
+        """Dos jugadores pelean, uno de los dos mueren
+
+        El jugador con mejor fitness sobrevive la mayoria de veces. Segun una pequeña probabilidad,
+        el peor jugador puede sobrevivir
+
+        El jugador que muere tiene una probabilidad de resucitar
+
+        Returns:
+        ========
+        died_player_index: int, indice del jugador que muere
+        should_resurrect: bool, indica si el jugador que muere debe resucitar
+        """
+
+        # Seleccionamos el mejor y peor indice de los jugadores
+        if first_player.fitness() < second_player.fitness():
+            best_index = first_index
+            worst_index = second_index
+        else:
+            worst_index = first_index
+            best_index = second_index
+
+        # Segun la probabilidad, el mejor jugador o el peor jugador sobreviven
+        if np.random.uniform() < Config.best_player_survives_prob:
+            died_player_index = worst_index
+        else:
+            died_player_index = best_index
+
+        # El jugador muerto debe sobrevivir?
+        if np.random.uniform() < Config.resurrect_prob:
+            should_resurrect = True
+        else:
+            should_resurrect = False
+
+        return died_player_index, should_resurrect
+
 
     def __str__(self):
         """Para hacer un buen print de estos objetos"""
