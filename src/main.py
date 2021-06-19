@@ -44,7 +44,12 @@ def parameter_tuning():
         - number_of_players: 500, 1000, 5000, 10000, 20000, 25000 <- Ganador: 25k pero es demasiado
                                                                      lento, asi que nos quedamos con
                                                                      20k
-        - resurrect_prob: 0.05, 0.1 <- Ganador:
+        - resurrect_prob: 0.05, 0.1, 0.25, 0.5 <- Ganador: 0.50, podriamos seguir pero queremos parar
+                                                           aqui por no restarle importancia al descenso
+                                                           de la poblacion
+
+        - max_evals_hard_local_search: 100, 200, 375, 500 <- Ganador: 375
+        - player_radius_vision_per_dimension: 25, 50, 75, 100 <- Ganador: 25
     """
 
     # Tomamos los parametros por linea de comandos
@@ -52,7 +57,7 @@ def parameter_tuning():
     np.random.seed(123456789)
 
     # Primera configuruacion
-    Config.resurrect_prob = 0.1
+    Config.player_radius_vision_per_dimension = 50
 
     first_config_error = []
     for function_id in range(1, 31):
@@ -69,7 +74,7 @@ def parameter_tuning():
         first_config_error.append(err)
 
     # Segunda configuracion:
-    Config.resurrect_prob = 0.5
+    Config.player_radius_vision_per_dimension = 25
 
     second_config_error = []
     for function_id in range(1, 31):

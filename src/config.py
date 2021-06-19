@@ -25,7 +25,7 @@ class Config:
     player_radius_vision_per_dimension = 50
     players_to_compete = 4
     best_player_survives_prob = 0.90
-    resurrect_prob = 0.05
+    resurrect_prob = 0.5
     number_of_grace_soft_local_search = 5
 
     # Cerrado del circulo
@@ -33,5 +33,5 @@ class Config:
     circle_step = -0.1
 
     # Busqueda fuerte
-    max_evals_hard_local_search = 100
+    max_evals_hard_local_search = 375
     delta = 0.15
