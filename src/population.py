@@ -56,7 +56,6 @@ class Population:
         """Devuelve el mejor jugador de esta poblacion"""
 
         # Comprobacion de seguridad
-        # TODO -- no llamar a esta funcion en la version final porque hace que vaya mas lento
         if self.is_valid() == False:
             raise Exception("Population.get_best_player: population is not valid")
 

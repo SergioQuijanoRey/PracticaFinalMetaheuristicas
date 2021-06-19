@@ -102,7 +102,6 @@ class Player:
             delta = np.random.uniform(-Config.step_size, Config.step_size)
 
             # Modificamos la posicion
-            # TODO -- es necesario hacer copy() ??
             new_position = self.position.copy()
             new_position[position] = new_position[position] + delta
 

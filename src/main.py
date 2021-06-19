@@ -101,9 +101,8 @@ def parameter_tuning():
 
 
 if __name__ == "__main__":
-    # TODO -- comentar esta funcion
     # Esta funcion esta comentada porque el parameter tuning ya ha sido realizado
-    parameter_tuning()
+    #  parameter_tuning()
 
     # Tomamos los parametros por linea de comandos
     dimension, hard_local_search = get_program_parameters()
@@ -111,26 +110,29 @@ if __name__ == "__main__":
     print("==> Inicializamos la semilla aleatoria")
     np.random.seed(123456789)
 
-    # Lanzamos todas las funciones
-    for function_id in range(1, 31):
-        # Fijamos la funcion a utilizar en esta iteracion
-        # Con ello, el resto de llamadas cec17 usan los datos de la funcion especificada (en particular,
-        # el fitness)
-        cec17.init("battle_royale", function_id, dimension);
+    # Hacemos 10 rondas en las que lanzamos todas las funciones
+    for _ in range(10):
 
-        # Para mostrar los mensajes por pantalla
-        #  cec17.print_output()
+        # Lanzamos todas las funciones
+        for function_id in range(1, 31):
+            # Fijamos la funcion a utilizar en esta iteracion
+            # Con ello, el resto de llamadas cec17 usan los datos de la funcion especificada (en particular,
+            # el fitness)
+            cec17.init("battle_royale", function_id, dimension);
 
-        # Inicalizamos nuestra metaheuristica segun el parametro dado por el usuario
-        if hard_local_search == False:
-            mh = BattleRoyale(dimension = dimension, number_of_players = Config.number_of_players)
-        else:
-            mh = BattleRoyaleMemetic(dimension = dimension, number_of_players = Config.number_of_players)
+            # Para mostrar los mensajes por pantalla
+            #  cec17.print_output()
 
-        # Tomamos la solucion a partir de la busqueda
-        best_player = mh.run_game()
+            # Inicalizamos nuestra metaheuristica segun el parametro dado por el usuario
+            if hard_local_search == False:
+                mh = BattleRoyale(dimension = dimension, number_of_players = Config.number_of_players)
+            else:
+                mh = BattleRoyaleMemetic(dimension = dimension, number_of_players = Config.number_of_players)
 
-        # Mostramos el error alcanzando para esta funcion
-        err = cec17.fitness(best_player.to_list(), dimension)
-        print(f"Funcion {function_id},\terror: {err}")
+            # Tomamos la solucion a partir de la busqueda
+            best_player = mh.run_game()
+
+            # Mostramos el error alcanzando para esta funcion
+            err = cec17.fitness(best_player.to_list(), dimension)
+            print(f"Funcion {function_id},\terror: {err}")
 

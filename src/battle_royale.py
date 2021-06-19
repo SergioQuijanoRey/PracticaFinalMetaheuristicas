@@ -43,8 +43,6 @@ class BattleRoyale:
         Returns:
         ========
         best_player: el jugador que gana la partida
-
-        TODO -- borrar los mensajes por pantalla porque pueden relantecer la ejecucion
         """
 
         # Controlamos las evaluaciones que nos quedan
@@ -87,7 +85,6 @@ class BattleRoyale:
                 break
 
             # Los jugadores se mueven algo
-            # TODO -- no iterar sobre todos los jugadores
             self.population.soft_local_search_over_all_players(self.max_evals())
 
             # Hacemos mas cerrado el circulo

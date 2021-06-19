@@ -9,8 +9,9 @@ class BattleRoyaleMemetic(BattleRoyale):
     busqueda local, sino que nos basabamos mas en el mecanismo de jugadores matandose, jugadores muriendo
     por el cerrado del circulo y jugadores resucitando para dar variedad a la poblacion
 
-    TODO -- indicar donde vamos a aplicar la busqueda local fuerte
-    Aplicaremos la busqueda local fuerte sobre TODO
+    Aplicaremos la busqueda local fuerte sobre sobre los individuos que resucitan. Podriamos aplicar
+    la hibridacion de una forma clasica, pero decidimos aplicar la hibridacion en una parte fundamental
+    de nuestra metaheuristica
 
     Solo tenemos que modifcar el inicializador para hacer self.memetic == True. En la version base de
     la clase tenemos toda la logica que incluye el comportamiento memetico
