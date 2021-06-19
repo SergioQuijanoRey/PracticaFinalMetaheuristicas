@@ -131,17 +131,23 @@ class Player:
         # correspondiente, que es el que tomamos ahora como nuestro
         self = best_player
 
-    def hard_local_search(self, max_evals):
+    def hard_local_search(self, max_evals, ignore_config_threshold = False):
         """
         Aplicamos una busqueda local fuerte sobre este jugador
 
         Parameters:
         ===========
         max_evals: las evaluaciones del fitness maximas
+        ignore_config_threshold: se consume el maximo de evaluaciones ignorando el tope dado en la
+                                 configuracion. Util para la ultima busqueda sobre el mejor jugador
+                                 en el algoritmo memetico
         """
 
         # Tomamos el minimo entre estos dos maximos de evaluaciones
-        max_local_evals = min(Config.max_evals_hard_local_search, max_evals - self.ev_counter.get_evals())
+        if ignore_config_threshold == False:
+            max_local_evals = min(Config.max_evals_hard_local_search, max_evals - self.ev_counter.get_evals())
+        else:
+            max_local_evals = max_evals - self.ev_counter.get_evals() - 100
 
         # Corremos esta busqueda local fuerte
         result, _ = self.position = solis.soliswets(

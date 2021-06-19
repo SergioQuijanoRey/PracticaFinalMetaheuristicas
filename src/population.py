@@ -86,10 +86,17 @@ class Population:
             player.soft_local_search(max_evals)
 
 
-    def kill_closed_players(self, max_evals):
-        """En cada ronda los jugadores pelean entre si. Se selecciona un jugador de forma aleatoria
+    def kill_closed_players(self, max_evals, resurrect_hard_local_search):
+        """
+        En cada ronda los jugadores pelean entre si. Se selecciona un jugador de forma aleatoria
         y este pelea contra un numero fijado en Config de jugadores mas cercanos a el. En el proceso,
         algunos jugadores reviven y consumen su tiempo de gracia
+
+        Parameters:
+        ===========
+        max_evals: el numero de evaluaciones maximas que se pueden consumir
+        resurrect_hard_local_search: bool, indica si se usa local search suave o fuerte para las
+                                     resurrecciones
         """
 
         # No matamos a los jugadores dentro del bucle para no tener problemas con los indices fuera
@@ -129,7 +136,7 @@ class Population:
                 self.resurrect(died_player_index)
 
                 # Intensificamos este jugador con su periodo de gracia
-                self.grace_time_for_resurrecteds([died_player_index], max_evals)
+                self.grace_time_for_resurrecteds([died_player_index], max_evals, resurrect_hard_local_search)
             else:
                 players_to_kill.append(died_player_index)
 
@@ -164,32 +171,52 @@ class Population:
         directamente se modifica la posicion del jugador"""
         self.players[index] = Player.random_player(self.dimension)
 
-    def grace_time_for_resurrecteds(self, resurrected_players_indixes, max_evals):
+    def grace_time_for_resurrecteds(self, resurrected_players_indixes, max_evals, hard_local_search = False):
         """
         Intensifica a los jugadores que han muerto y que han resucitado, para que puedan ser
         competitivos con el resto de jugadores
 
-        TODO -- hacer una busqueda local dura mas inteligente
-
         Parameters:
         ===========
         resurrected_players_indixes: indices en la poblacion de los jugadores que han resucitado
+        max_evals: maximo de evaluaciones que quedan por consumir
+        hard_local_search: indica si usamos la busqueda local fuerte en vez de la suave
         """
         for index in resurrected_players_indixes:
             for _ in range(Config.number_of_grace_soft_local_search):
-                self.players[index].soft_local_search(max_evals)
+                # Usamos el tipo de busqueda adecuado
+                if hard_local_search == False:
+                    self.players[index].soft_local_search(max_evals)
+                else:
+                    self.players[index].hard_local_search(max_evals)
+
+                # Comprobamos que no hayamos agotado las evaluaciones
+                if self.ev_counter.get_evals() >= max_evals:
+                    break
+
+            # Comprobamos que no hayamos agotado las evaluaciones
+            if self.ev_counter.get_evals() >= max_evals:
+                break
 
     def remaining_players(self):
         """Calcula el porcentaje de jugadores que quedan en la poblacion respecto al numero de jugadores
         inicial"""
         return len(self.players) / Config.number_of_players
 
-    def kill_players_outside_circle(self, circle_size, max_evals):
+    def kill_players_outside_circle(self, circle_size, max_evals, resurrect_hard_local_search):
         """
         Los jugadores que quedan fuera del circulo mueren. Algunos de estos pueden resucitar.
 
         El tamaño del circulo indica el numero de veces por encima que el fitness de un jugador puede
         estar respecto el fitness del mejor jugador
+
+        Parameters:
+        ===========
+        circle_size: numero de veces que el fitness de un jugador puede sobrepasar el fitness del
+                     mejor jugador (estamos en un problema de minimizacion)
+        max_evals: numero maximo de evaluaciones del fitness
+        resurrect_hard_local_search: indica si queremos usar o no la busqueda loca fuerte para las
+                                     resurrecciones
         """
 
         # Comprobacion de seguridad
@@ -216,7 +243,7 @@ class Population:
                     self.resurrect(idx)
 
                     # Intensificamos este jugador con su periodo de gracia
-                    self.grace_time_for_resurrecteds([idx], max_evals)
+                    self.grace_time_for_resurrecteds([idx], max_evals, resurrect_hard_local_search)
                 else:
                     killed_players.append(idx)
 

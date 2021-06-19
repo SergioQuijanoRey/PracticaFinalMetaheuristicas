@@ -28,19 +28,8 @@ class BattleRoyale:
         self.dimension = dimension
         self.population = None
         self.number_of_players = number_of_players
+        self.memetic = False # Indica si estamos en la vesrion memetica
 
-    def dummy_search(self):
-        """Devuelve un jugador aleatorio.
-        Con fines de debuggear nuestro codigo
-        """
-        best_solution = Player.random_player(self.dimension)
-
-        evals = 0
-        while evals < self.dimension * self.ev_per_dimension:
-            evals += 1000
-        print("")
-
-        return best_solution
 
     def max_evals(self):
         """Calcula el maximo de evaluaciones del fitness que se pueden consumir"""
@@ -62,10 +51,8 @@ class BattleRoyale:
         ev_counter = EvalsCounter()
         ev_counter.reset()
 
-        print("--> Fase inicial: generando jugadores en posiciones aleatorias")
+        # Poblacion inicial de jugadores en posiciones aleatorias
         self.population = Population.random_population(self.number_of_players, self.dimension)
-
-        print("--> Fase 1")
 
         # Condiciones para permanecer en la fase 1 de la partida
         # Escribimos las condiciones en lambdas para mayor expresividad y para que en cada iteracion
@@ -86,16 +73,14 @@ class BattleRoyale:
             # Ronda de asesinatos entre jugadores iniciales
             # En el proceso, algunos jugadores mueren y resucitan. En esta funcion, estos jugadores
             # resucitados consumen su tiempo de gracia
-            resurrected_players_indixes = self.population.kill_closed_players(self.max_evals())
-
-        print("--> Fase 2")
+            resurrected_players_indixes = self.population.kill_closed_players(self.max_evals(), self.memetic)
 
         circle_size = Config.init_circle_size
 
         while ev_counter.get_evals() < self.max_evals():
             # Los jugadores fuera del circulo mueren
             # En este proceso, alguno de los jugadores reviven
-            self.population.kill_players_outside_circle(circle_size, self.max_evals())
+            self.population.kill_players_outside_circle(circle_size, self.max_evals(), self.memetic)
 
             # Comprobamos que no hayamos consumido todas las evaluaciones
             if ev_counter.get_evals() >= self.max_evals():
@@ -111,6 +96,11 @@ class BattleRoyale:
             # Si solo queda un jugador, paramos de iterar
             if len(self.population) == 1:
                 break
+
+        # En la version memetica gastamos el resto de evaluaciones aplicando busqueda local sobre el
+        # mejor jugador
+        if self.memetic == True:
+            self.population.get_best_player().hard_local_search(self.max_evals(), ignore_config_threshold = True)
 
         # Devolvemos el mejor jugador
         return self.population.get_best_player()
