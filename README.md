@@ -36,6 +36,11 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
 * [ ] En la memoria, comentar que el primer jugador en kill_closed_players es mas probable que muera
 * [ ] En la memoria, comentar el número de jugadores revividos que consiguen acabar siendo competitivos
 * [ ] En la memoria, comentar que tenemos demasiados parametros que fijar. Seria interesante tener parámetros autoadaptativos
+* [ ] En la memoria, comentar que usamos la hibridación sobre el mecanismo de resurección
+    * Este es el mecanismo fundamental en la metaheurística original
+    * Le estamos dando más relevancia todavía a este mecanismo
+    * Se aleja de los tres mecanismos vistos en prácticas, así que parece más interesante
+    * Se intensifica con las evaluaciones restantes al terminar la segunda fase
 
 # Algoritmo
 
@@ -49,3 +54,12 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
     4.1. Opt 1: Seleccionamos aleatoriamente grupos de k jugadores y eliminamos al peor de cada grupo
     4.2. Opt 2: Eliminamos a los peores individuos de la poblacion, todavia con probabilidad de revivir
     4.3. Opt 3: Eliminamos a los peores individuos de la poblacion, que queden por encima de un porcentaje del mejor fitness
+
+# Formas de incluir la hibridación en el algoritmo
+
+1. Se aplica la búsqueda local fuerte a los jugadores que resucitan, para que sean más competentes
+2. Aplicarla de forma clásica
+    2.1. Sobre todos los miembros de la población <- No creo que sea interesante
+    2.2. Sobre un porcentaje aleatorio de la población <- Da más variedad a la población
+    2.3. Sobre el mejor porcentaje de la población <- Puede provocar que los jugadores peores de la población no puedan ser competentes
+* Además, al final de las dos fases, aplicar la búsqueda local hasta agotar las iteraciones sobre el mejor jugador obtenido
