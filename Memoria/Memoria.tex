@@ -197,6 +197,34 @@ Como era de esperar, esta propuesta original debe ser modificada ligeramente, pu
 \pagebreak
 \section{Implementación de la metaheurística} \label{implementacion}
 
+El desarrollo de esta metaheurística se ha realizado en \lstinline{python}, debido al rápido desarrollo que permite este lenguaje y la disponibilidad de \emph{wrappers} para el lenguaje gracias a \cite{daniel_repo:online}.
+
+El proceso de instalación y ejecución del software se desarrolla en el \emph{Readme} del repositorio en el que tenemos alojado el código \cite{repositorio:online}, y por tanto no describimos de nuevo este proceso de instalación y ejecución necesario para trabajar con nuestra implementación.
+
+Pasamos a comentar algunos aspectos clave de la implementación (no todo el código en general, que está a nuestro modo de ver lo suficientemente bien documentado como para que sea muy sencillo de leer).
+
+\subsection{Clase \lstinline{Config}}
+
+La clase \lstinline{Config} centraliza todos los parámetros que hemos fijado en nuestra metaheurística. Los atributos estáticos hace que sea fácil acceder a parámetros comunes en distintas partes del código sin una penalización en tiempos de ejecución aparentemente relevante.
+
+Además, como se hace en la función \lstinline{parameter_tuning} de \lstinline{main.py}, podemos modificar estos atributos estáticos para ver cómo afecta esto al rendimiento de nuestra metaheurística.
+
+\subsection{Clase \lstinline{EvalsCounter}}
+
+Esta clase se implementa con el uso del patrón \emph{Singleton}. Su objetivo es centralizar la cuenta de evaluaciones del \emph{fitness} consumidas hasta el momento, sin tener que pasar a todos los métodos una parámetro adicional.
+
+Sin embargo, sospechamos que esto sí que puede introducir una penalización en tiempo de ejecución. Pero al estar escribiendo un primer prototipo, vale más la pena trabajar con un código mas sencillo en el que es más rápido realizar cambios sobre la marcha (como hemos tenido que realizar, al no tener una metaheurística ya desarrollado con un funcionamiento bueno asegurado).
+
+En una versión mejorada en la que los tiempos de ejecución sean más críticos, evitar este patrón \emph{Singleton} es obligado.
+
+\subsection{Clase \lstinline{Player}}
+
+Define un jugador. Principalmente, viene dado por las coordenadas en las que se encuentra, que vienen dadas por \lstinline{self.position}.
+
+Por motivos de eficiencia, \emph{cacheamos} el valor del \emph{fitness}, para evitar desperdiciar evaluaciones del \emph{fitness}. Del mismo modo, en la propia lógica que maneja la cache, usamos el \emph{Singleton} que ya hemos comentado para llevar la cuenta de todas las evaluaciones del \emph{fitness} consumidas.
+
+\subsection{Pseudocódigo del algoritmo}
+
 \subsection{\emph{Parameter Tuning}} \label{tuning}
 
 \pagebreak
@@ -210,6 +238,8 @@ Como era de esperar, esta propuesta original debe ser modificada ligeramente, pu
 
 \pagebreak
 \section{Propuesta de mejoras}
+
+% Evitar el singleton, como ya se ha comentado -> Eficiencia, antipatron, no permite paralelizacion
 
 \pagebreak
 
