@@ -6,7 +6,7 @@ class Config:
     upper_range = 100
 
     # Poblacion
-    number_of_players = 500
+    number_of_players = 20_000
 
     # Evaluaciones del fitness que tenemos por cada dimension del problema
     ev_per_dimension = 10_000
