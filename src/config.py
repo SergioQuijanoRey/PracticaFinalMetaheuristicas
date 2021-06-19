@@ -34,4 +34,4 @@ class Config:
 
     # Busqueda fuerte
     max_evals_hard_local_search = 100
-    delta = step_size
+    delta = 0.15
