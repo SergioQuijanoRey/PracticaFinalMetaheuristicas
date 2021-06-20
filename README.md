@@ -41,7 +41,7 @@ Por tanto, tendré que buscar unos valores para los parámetros que aseguren un 
     * Le estamos dando más relevancia todavía a este mecanismo
     * Se aleja de los tres mecanismos vistos en prácticas, así que parece más interesante
     * Se intensifica con las evaluaciones restantes al terminar la segunda fase
-* [ ] En la memoria, comentar que en el ajuste de parámetros, por temas computacionales:
+* [x] En la memoria, comentar que en el ajuste de parámetros, por temas computacionales:
     * Solo usamos la dimension 10
     * Hacemos coordinate descent: nos fijamos en cada momento en solo un parametro a cambiar
 

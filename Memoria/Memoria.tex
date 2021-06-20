@@ -367,7 +367,69 @@ Por tanto, debemos buscar un método para fijar unos valores de estos parámetro
 
 Empleamos una combinación de búsqueda binaria con la técnica \emph{Coordinate Descent}. Elegimos un parámetro libre a optimizar. Realizamos sucesivas búsquedas binarias hasta encontrar un valor óptimo para el parámetro. Tras esto, realizamos el mismo proceso iterativamente con las parámetros libres restantes.
 
-Este proceso lo realizamos de forma manual usando la función \lstinline{parameter_tuning} del fichero \lstinline{main.py}. Los resultados en bruto de este proceso se muestran en el fichero \lstinline{parameter_tuning/parameter_tuning_results.txt}. Resumimos los resultados en las siguientes tablas:
+Además, solo hacemos esta búsqueda en dimensión 10, para acelerar el proceso, a pesar de que este procedimiento sea subóptimo.
+
+Este proceso lo realizamos de forma manual usando la función \lstinline{parameter_tuning} del fichero \lstinline{main.py}. Los resultados en bruto de este proceso se muestran en el fichero \lstinline{parameter_tuning/parameter_tuning_results.txt}. Resumimos los resultados en las siguientes tablas, comenzando por el número de jugadores:
+
+\begin{table}[H]
+    \centering
+    \resizebox{1.1\textwidth}{!}{
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Primer parámetro} & \textbf{Segundo parámetro} & \textbf{Error del primer parámetro} & \textbf{Error del segundo parámetro} & \textbf{Error primero / Error segundo} \\
+        \hline
+        5000 & 10.000 & 659477824.1690311 & 285275478.41262203 & 2.12922252252212 \\
+        10.000 & 20.000 & 188325303.46050686 & 169032537.0438895 & 1.187489601248911 \\
+        20.000 & 25.000 & 419574922.2396657 &  278099949.5320168 & 1.089308035166435 \\
+        \hline
+    \end{tabular}}
+    \caption{\emph{Parameter Tuning} para el número de jugadores}
+\end{table}
+
+A pesar de que los mejores resultados los obtengamos con 25.000 jugadores, elegimos usar 20.000 jugadores, porque los tiempos de ejecución son demasiado lentos con 25.000 jugadores. Por el mismo motivo, paramos la búsqueda aunque valores más altos sean prometedores.
+
+A continuación, exploramos la probabilida de resucitar:
+
+\begin{table}[H]
+    \centering
+    \resizebox{1.1\textwidth}{!}{
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Primer parámetro} & \textbf{Segundo parámetro} & \textbf{Error del primer parámetro} & \textbf{Error del segundo parámetro} & \textbf{Error primero / Error segundo} \\
+        \hline
+        0.05 & 0.1 & 419574922.2396657 & 195545700.25415954 & 1.1796652597282404 \\
+        0.1 & 0.5 & 530618675.60314316 & 238315604.57736704 & 1.357938844000634 \\
+        0.5 & 0.25 & 57071508.32941685 & 275490531.32538956 & 1.0400957207903052 \\
+        \hline
+    \end{tabular}}
+    \caption{\emph{Parameter Tuning} para la probabilidad de resucitar}
+\end{table}
+
+Aunque probabilidades por encima de 0.5 parezcan prometedoras, pues no paramos de mejorar, no queremos emplear probabilidades por encima de 0.5. De lo contrario, estaríamos realizando demasiadas búsquedas locales, restándole protagonismo a los otros mecanismos de nuestra metaheurística. Queremos que la búsqueda local sea un componente secundario que permita a los jugadores moverse por el mapa. Cuando realicemos la hibridación, la búsqueda local pasará a tener un papel principal.
+
+Hecho esto, pasamos a ajustar el parámetro del radio de visión:
+
+\begin{table}[H]
+    \centering
+    \resizebox{1.1\textwidth}{!}{
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \textbf{Primer parámetro} & \textbf{Segundo parámetro} & \textbf{Dimensión} & \textbf{Error del primer parámetro} & \textbf{Error del segundo parámetro} & \textbf{Error primero / Error segundo} \\
+        \hline
+        50 & 100 & 10 &  145468977.6843304 & 199935070.89682162 & 0.8521445003322603 \\
+        50 & 75 & 10 & 145468977.6843304 & 199767035.44570535 & 0.8980227918235176 \\
+        50 & 25 & 10 & 145468977.6843304 & 199309400.0598218 & 1.672495760214323 \\
+        50 & 25 & 30 & 9.063796890289635e+40 & 2.463649041371674e+41 & 0.9437658215205048 \\
+        \hline
+    \end{tabular}}
+    \caption{\emph{Parameter Tuning} para el radio de visión}
+\end{table}
+
+Por el comportamiento que se muestra en las tablas, tomamos 50 como valor para el parámetro.
+
+El resto de parámetros los fijamos según la intuición que tenemos sobre el problema que estamos tratando. De nuevo, todos los valores empleados para los parámetros se pueden consultar cómodamente en la clase \lstinline{Config}
+
+Notar también que cuando hagamos la hibridación, introduciremos nuevos parámetros. En \emph{\ref{tuning_hib}. \nameref{tuning_hib}}, realizaremos de nuevo este proceso con los parámetros de la metaheurística hibridada.
 
 \pagebreak
 \section{Resultados de la metaheurística}
@@ -375,14 +437,33 @@ Este proceso lo realizamos de forma manual usando la función \lstinline{paramet
 \pagebreak
 \section{Hibridación con la búsqueda local \emph{Solis West}}
 
-\subsection{Parameter Tuning para la hibridación}
+\subsection{Parameter Tuning para la hibridación} \label{tuning_hib}
 
 Los nuevos parámetros con los que tenemos que trabajar son:
 
 \begin{itemize}
-    \item \lstinline{max_evals_hard_local_search}: máximo de evaluaciones que permitimos por cada búsqueda local
+    \item \lstinline{max_evals_hard_local_search}: máximo de evaluaciones que permitimos por cada búsqueda local fuerte
     \item \lstinline{delta}: valor que controlar el comportamiento de la búsqueda \emph{Solis West}
 \end{itemize}
+
+Se recomienda que $\delta \in [0.1, 0.2]$, así que fijamos $\delta = 0.15$. Para el máximo de evaluaciones por cada búsqueda local, repetimos el proceso de \emph{parameter tuning}:
+
+\begin{table}[H]
+    \centering
+    \resizebox{1.1\textwidth}{!}{
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Primer parámetro} & \textbf{Segundo parámetro} & \textbf{Error del primer parámetro} & \textbf{Error del segundo parámetro} & \textbf{Error primero / Error segundo} \\
+        \hline
+        100 & 200 & 57071508.32941685 & 21936177.06833397 & 704.8020373037883 \\
+        200 & 500 & 432924725.45316225 & 38147478.32365207 & 252.93678368043257 \\
+        500 & 375 & 18104481.526603617 & 79681777.65233472 & 1.3939502593398763 \\
+        \hline
+    \end{tabular}}
+    \caption{\emph{Parameter Tuning} para el máximo de evaluaciones por cada búsqueda local fuerte}
+\end{table}
+
+Así que empleamos como mucho 375 evaluaciones del \emph{fitness} por cada búsqueda local fuerte que empleemos.
 
 \pagebreak
 \section{Resultados de la hibridación}
