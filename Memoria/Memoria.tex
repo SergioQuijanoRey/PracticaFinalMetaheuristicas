@@ -149,7 +149,7 @@ En nuestro caso, como indicaron los profesores de la asignatura, por problemas c
 Por tanto, usamos un \emph{fork} de este repositorío para desarrollar nuestro trabajo, que se encuentra en \cite{repositorio:online}.
 
 \pagebreak
-\section{Descripción de la metaheurística}
+\section{Descripción de la metaheurística} \label{descripcion}
 
 \subsection{Propuesta original}
 
@@ -163,7 +163,8 @@ En segundo lugar, los jugadores deben matar y defenderse de los otros jugadores 
 
 En tercer lugar, a partir de cierto tiempo, el mapa se cierra incrementalmente sobre un área circular del mapa, cada vez más pequeña. Con esto se fomenta que los jugadores tengan que enfrentarse unos con otros, y potenciando que los jugadores mejor equipados y más habilidosos ganen sin tener que esperar demasiado tiempo a malos jugadores escondidos por el mapa.
 
-Para representar esto en la metaheurística, a partir de cierta iteración, se realizarán eliminaciones de la población. A partir de este momento, cada cierto número de iteraciones, los $\lambda$ peores elementos de la población, son eliminados al quedar fuera del círculo
+Para representar esto en la metaheurística, a partir de cierta iteración, se realizarán eliminaciones de la población. A partir de este momento, cada cierto número de iteraciones, los $\lambda$ peores elementos de la población, son eliminados al quedar fuera del círculo.
+
 
 La siguiente imagen, extraída de \cite{other_paper:paper}, ilustra de forma clara cuál es la mecánica del cierre del círculo:
 
@@ -172,6 +173,8 @@ La siguiente imagen, extraída de \cite{other_paper:paper}, ilustra de forma cla
     \includegraphics[width=0.6\textwidth]{cierre_circulo}
     \caption{Ilustración de la mecánica del cierre del círculo}
 \end{figure}
+
+Notar que la idea más natural para representar esta mecánica es cerrar el círculo sobre el espacio de búsqueda. Sin embargo, es una mala decisión, pues estamos restringiendo arbitrariamente soluciones en los bordes del espacio de búsqueda real, donde pueden encontrarse soluciones de buena calidad. Es por tanto que preferimos materializar la idea del círculo que se cierra sobre el fitness de los jugadores en referencia al mejor jugadr en vez de restringir el espacio de búsqueda.
 
 En cuarto lugar, hay una cierta probabilidad de revivir si un jugador muere, aunque no es muy alta. Cuando un jugador revive, reaparece sin nada de lo que habías estado recolectando durante la partida. Se otorga un periodo de inmunidad en el que el jugador que ha revivido tiene que recolectar rápidamente recursos para ser competitivo contra jugadores que van más avanzados en la partida. Además, puede ser que reaparezcan fuera del círculo, luego deben lograr entrar al círculo en el tiempo de gracia
 
@@ -194,6 +197,14 @@ Como era de esperar, esta propuesta original debe ser modificada ligeramente, pu
     \item Por su poca relevancia, ignoramos la parte en la que comentamos que si un jugador muere contra el mejor jugador, forzosamente revive
 \end{itemize}
 
+\subsection{Trabajo existente}
+
+En el \emph{paper} \cite{other_paper:paper}, se presenta una metaheurística basada también en este género de videojuegos. Sin embargo, en el proceso empleado para materializarla en una metaheurística concreta se toman decisiones completamente distintas a las que se presentan en este  trabajo. Por tanto, aunque la inspiración sea común, en la práctica las dos metaheurística son significativamente distintas.
+
+En \cite{other_paper:paper}, cuando dos jugadores están cerca, se disparan entre ellos. Esto tiene dos efectos. El primero, el jugador que recibe el disparo aumenta en uno el contador de disparos recibido. Cuando el contador llega a un valor fijado, el jugador muere y resucita en un punto aleatorio del mapa. En segundo lugar, el jugador que recibe el disparo se mueve para evitar recibir más disparos. Este movimiento se hace en dirección hacia el mejor jugador.
+
+Así, la propuesta \cite{other_paper:paper} considera una población de tamaño fijo, que no decrece como nuestra población, pues nuestra probabilidad de resucitar está por debajo de $1.0$. En segundo lugar, en las batallas no incluimos el mecanismo de movernos por el mapa. Usamos una búsqueda local suave para movernos por el mapa, en ningún momento queremos converger hacia la posición del mejor jugador.
+
 \pagebreak
 \section{Implementación de la metaheurística} \label{implementacion}
 
@@ -202,6 +213,104 @@ El desarrollo de esta metaheurística se ha realizado en \lstinline{python}, deb
 El proceso de instalación y ejecución del software se desarrolla en el \emph{Readme} del repositorio en el que tenemos alojado el código \cite{repositorio:online}, y por tanto no describimos de nuevo este proceso de instalación y ejecución necesario para trabajar con nuestra implementación.
 
 Pasamos a comentar algunos aspectos clave de la implementación (no todo el código en general, que está a nuestro modo de ver lo suficientemente bien documentado como para que sea muy sencillo de leer).
+
+\subsection{Pseudocódigo de la metaheurística}
+
+Comentamos en primer lugar el pseudocódigo general de la metaheurística, que seguirá las ideas comentadas en \emph{\ref{descripcion}. \nameref{descripcion}}:
+
+\begin{lstlisting}[language = python]
+# Iniciamos una poblacion aleatoria
+population = random_population(number of players)
+
+# Condiciones para permanecer en la fase 1
+phase1_condition = evals < max_evals and population.remaining_players() >= phase1_players_percentage
+while pase1_condition:
+    # Cada jugador se mueve por el mapa
+    for player in population.players:
+        player.soft_local_search()
+
+    # Ronda de asesinatos entre jugadores cercanos
+    # El primer jugador se elige aleatoriamente
+    player1 = population.random_player
+
+    # Se escoge un numero fijo de jugadores. Estos son los mas cercanos al player1
+    players = n fijo jugadores mas cercanos a player1
+
+    # Realizamos los asesinatos
+    for player2 in players:
+        # Los jugadores deben estar en un radio de vision
+        if player1 no ve a player2:
+            continue
+
+        dead_player, resucitar = competir(player1, player2)
+        if resucitar:
+            # Aparece en una posicion aleatoria del mapa y tiene un periodo de gracia
+            dead_player.respawn()
+            dead_player.grace_time()
+
+
+        # Si el jugador que muere es el player1, paramos
+        if dead_player == player1 and resucitar == False:
+            break
+
+# Comienza la fase 2
+circle_size = init_circle_size
+while no se han consumido todas las iteraciones:
+    # Los jugadores fuera del circulo mueren
+    # Algunos pueden resucitar, haciendo player.respawn() y despues player.grace_time()
+    population.kill_players_outside_circle()
+
+    # Los jugadores se mueven algo
+    for player in population.players:
+        player.soft_local_search()
+
+
+    # El circulo se cierra
+    circle_size += circle_step
+
+    # Si solo queda un jugador, paramos de iterar
+    if len(population) == 1:
+        break
+
+# Devolvemos el mejor jugador
+return population.get_best_player()
+\end{lstlisting}
+
+La búsqueda local suave utilizada se describe en el siguiente pseudocódigo:
+
+\begin{lstlisting}
+def soft_local_search(self):
+    best_player = self
+
+    for _ in 0..tries_in_local_search:
+        # Se selecciona la coordenada y el valor de variacion de forma aleatoria
+        position = random(0, len(self.position))
+        delta = random(step_size, step_size)
+
+        # Modificamos la posicion
+        new_position = self.position.copy()
+        new_position[position] = new_position[position] + delta
+
+        # Generamos el nuevo jugador
+        new_player = None
+        new_player = Player(self.dimension, new_position)
+
+        # Si el jugador no es valido, lo ignoramos
+        if new_player.is_valid == False:
+            continue
+
+        # Comprobamos si es mejor que el mejor jugador hasta el momento
+        new_pla_fit = new_player.fitness()
+        if new_player.fitness() < best_player.fitness():
+            best_player = new_player
+
+
+    # Hacemos el cambio mas optimo
+    self = best_player
+\end{lstlisting}
+
+
+Con este pseudocódigo en mente, podemos describir algunos detalles relevantes de la implementación.
 
 \subsection{Clase \lstinline{Config}}
 
@@ -223,9 +332,42 @@ Define un jugador. Principalmente, viene dado por las coordenadas en las que se 
 
 Por motivos de eficiencia, \emph{cacheamos} el valor del \emph{fitness}, para evitar desperdiciar evaluaciones del \emph{fitness}. Del mismo modo, en la propia lógica que maneja la cache, usamos el \emph{Singleton} que ya hemos comentado para llevar la cuenta de todas las evaluaciones del \emph{fitness} consumidas.
 
-\subsection{Pseudocódigo del algoritmo}
+\subsection{Clase \lstinline{Population}}
+
+Representa al conjunto de jugadores. Permite inicializar poblaciones de jugadores aleatorias, aplicar búsquedas locales sobre todos los jugadores de la población, matar a los jugadores fuera del círculo, tomar al mejor jugador de la población, aplicar periodos de gracia a jugadores resucitados, \ldots
+
+\subsection{Clase \lstinline{BattleRoyale}}
+
+Representa el código de alto nivel de la metaheurística, principalmente lanzando el código necesario para la primera y segunda fase. Usa los métodos que la clase \lstinline{Population} ofrece para realizar operaciones sobre toda la población ya comentadas, y para realizar las comprobaciones que determinan en qué fase de la metaheurística nos encontramos.
+
+El método más importante es \lstinline{run_game}, que permite lanzar la ejecución de la metaheurística.
 
 \subsection{\emph{Parameter Tuning}} \label{tuning}
+
+Si se consulta la clase \lstinline{Config}, se pueden consultar todos los parámetros libre que hemos tenido que establecer en nuestra metaheurística. A continuación se da una breve descripción de cada uno de ellos:
+
+\begin{itemize}
+    \item \lstinline{lower_range}, \lstinline{upper_range}: el rango de las funciones reales con las que trabajamos. En cada coordenada, trabajamos con el rango $[-100, 100]$
+    \item \lstinline{number_of_players}: número de jugadores iniciales cuando comienza una partida
+    \item \lstinline{ev_per_dimension}: evaluaciones del fitness por cada dimensión del problema. Es un valor fijado a $10.000$
+    \item \lstinline{phase1_percentage}: porcentaje de evaluaciones máximas que reservamos para la primera fase de la partida
+    \item \lstinline{phase1_players_percentage}: porcentaje mínimo de jugadores con los que puede finalizar la primera fase de la partida
+    \item \lstinline{tries_in_local_search}: intentos que se pueden emplear en la búsqueda local suave
+    \item \lstinline{step_size}: tamaño de salto para la búsqueda local
+    \item \lstinline{player_radius_vision_per_dimension}: radio de visión de los jugadores
+    \item \lstinline{players_to_compete}: número de jugadores con los que compite el jugador aleatorio escogido
+    \item \lstinline{best_player_survives_prob}: probabilidad de que el mejor jugador sobreviva en una batalla
+    \item \lstinline{resurrect_prob}: probabilidad de resurrección
+    \item \lstinline{number_of_grace_soft_local_search}: número de búsquedas locales suaves que se usan cuando un jugador revive como tiempo de gracia
+    \item \lstinline{init_circle_size}: tamaño inicial del círculo
+    \item \lstinline{circle_step}: controla el cerrado del círculo
+\end{itemize}
+
+Por tanto, debemos buscar un método para fijar unos valores de estos parámetros, lo más óptimos posibles empleando un tiempo de computación razonable. El proceso ideal sería emplear \emph{Grid Search} sobre todas las combinaciones de los parámetros libres que queramos explorar. Sin embargo, esto no es factible en un tiempo razonable, y por tanto empleamos otro enfoque más rápido aunque subóptimo.
+
+Empleamos una combinación de búsqueda binaria con la técnica \emph{Coordinate Descent}. Elegimos un parámetro libre a optimizar. Realizamos sucesivas búsquedas binarias hasta encontrar un valor óptimo para el parámetro. Tras esto, realizamos el mismo proceso iterativamente con las parámetros libres restantes.
+
+Este proceso lo realizamos de forma manual usando la función \lstinline{parameter_tuning} del fichero \lstinline{main.py}. Los resultados en bruto de este proceso se muestran en el fichero \lstinline{parameter_tuning/parameter_tuning_results.txt}. Resumimos los resultados en las siguientes tablas:
 
 \pagebreak
 \section{Resultados de la metaheurística}
@@ -233,13 +375,23 @@ Por motivos de eficiencia, \emph{cacheamos} el valor del \emph{fitness}, para ev
 \pagebreak
 \section{Hibridación con la búsqueda local \emph{Solis West}}
 
+\subsection{Parameter Tuning para la hibridación}
+
+Los nuevos parámetros con los que tenemos que trabajar son:
+
+\begin{itemize}
+    \item \lstinline{max_evals_hard_local_search}: máximo de evaluaciones que permitimos por cada búsqueda local
+    \item \lstinline{delta}: valor que controlar el comportamiento de la búsqueda \emph{Solis West}
+\end{itemize}
+
 \pagebreak
 \section{Resultados de la hibridación}
 
 \pagebreak
-\section{Propuesta de mejoras}
+\section{Propuesta de mejoras} \label{mejoras}
 
 % Evitar el singleton, como ya se ha comentado -> Eficiencia, antipatron, no permite paralelizacion
+% Demasiados parametros. Usar parametros adaptativos para no tener que emplear parameter tuning altamente costoso computacionalmente cuando
 
 \pagebreak
 
