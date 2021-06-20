@@ -432,10 +432,29 @@ El resto de parámetros los fijamos según la intuición que tenemos sobre el pr
 Notar también que cuando hagamos la hibridación, introduciremos nuevos parámetros. En \emph{\ref{tuning_hib}. \nameref{tuning_hib}}, realizaremos de nuevo este proceso con los parámetros de la metaheurística hibridada.
 
 \pagebreak
-\section{Resultados de la metaheurística}
+\section{Resultados de la metaheurística} \label{resultados}
+
+% TODO -- Al final de la fase dos podemos realizar busquedas locales sobre el mejor jugador hasta agotar las evaluaciones del fitness
 
 \pagebreak
 \section{Hibridación con la búsqueda local \emph{Solis West}}
+
+\subsection{Mecanismo de hibridación}
+
+Para la hibridación usaremos la búsqueda local proporcionada por Daniel Molina en su repositorio \cite{daniel_repo:online}. En su código nos ha proporcionado la búsqueda \emph{Solis West} que usaremos como búsqueda local fuerte.
+
+Para la hibridación, la primera idea que consideramos es aplicar alguna de las hibridaciones vistas en las prácticas de la asignatura. Por ejemplo, cada cierto número de iteraciones, realizar la búsqueda local fuerte sobre toda la población, sobre un porcentaje aleatorio de la población o sobre el mejor porcentaje de la población.
+
+Sin embargo, dado el carácter exploratorio de este trabajo, decidimos introducir la búsqueda local fuerte en alguna de las componentes de nuestra metaheurística original. En concreto, pensamos que tiene interés introducir la hibridación sobre el mecanismo de resurrección de jugadores, pues como ya se ha visto, es el mecanismo principal del que dispone la metaheurística para introducir diversidad en la población. Y por tanto, es el lugar indicado donde vamos a buscar un equilibrio entre exploración (dada por la resurrección) y explotación (dada por la búsqueda local fuerte en el periodo de gracia).
+
+Así que cuando un jugador muere, emplea la búsqueda local fuerte durante el periodo de gracia, buscando ser tan competitivo como el resto de jugadores.
+
+Además, como ya hemos comentado en \emph{\ref{resultados}. \nameref{resultados}}, no estamos usando las evaluaciones del fitness que nos sobran tras finalizar la fase dos. Este es un buen punto en el que aplicar una búsqueda local fuerte sobre el mejor jugador de la población que vamos a devolver, para introducir más explotación en nuestra metaheurística.
+
+\subsection{Implementación}
+
+En la implementación de la clase \lstinline{BattleRoyale}, tenemos un atributo \lstinline{memetic} evaluado a \lstinline{False}. En la implementación de \lstinline{BattleRoyale.run_game()}, ya introducimos la lógica que hace que empleemos las búsquedas locales fuertes al resucitar y al acabar la fase 2. Así que lo que queda por hacer es crear una clase \lstinline{BattleRoyaleMemetic} que herede de \lstinline{BattleRoyale} y que únicamente modifique el inicializador para que \lstinline{memetic == True}.
+
 
 \subsection{Parameter Tuning para la hibridación} \label{tuning_hib}
 
@@ -471,8 +490,16 @@ Así que empleamos como mucho 375 evaluaciones del \emph{fitness} por cada búsq
 \pagebreak
 \section{Propuesta de mejoras} \label{mejoras}
 
-% Evitar el singleton, como ya se ha comentado -> Eficiencia, antipatron, no permite paralelizacion
-% Demasiados parametros. Usar parametros adaptativos para no tener que emplear parameter tuning altamente costoso computacionalmente cuando
+Con todo este trabajo, podemos proponer algunas mejoras que se siguen de los problemas que hemos encontrando en el desarrollo de esta práctica.
+
+En primer lugar, para una futura implementación, es necesario abandonar el uso del patrón \emph{Singleton}. En primer lugar, porque tiene un efecto negativo sobre los tiempos de cómputo. En segundo lugar, por todos los problemas que puede introducir a nivel de diseño, como por ejemplo problemas a la hora de escribir \emph{testing} al código. Cabe resaltar que el uso actual que hacemos del patrón no permite que introduzcamos paralelismo a la metaheurística, lo que sería muy interesante porque la base poblacional puede explotar en varias partes dicho paralelismo.
+
+En segundo lugar, hemos desarrollado una metaheurística que depende de demasiados parámetros. A la hora de aplicar la metaheurística de forma eficiente sobre un problema nuevo, debemos hacer \emph{parameter tuning} de forma efectiva para lograr buenos resultados. Con tantos parámetros libre, una técnica como \emph{Grid Search} supone unos tiempos de cómputo no razonables. Por tanto, se proponen dos posibles soluciones a este problema:
+
+\begin{itemize}
+    \item Realizar un estudio de los parámetros óptimos para distintos problemas, e intentar fijar el mayor número de parámetros libres posibles (aquellos con baja variabilidad entre distintos problemas). Con ello, solo se tendría que realizar \emph{parameter tuning} sobre una conjunto reducido de parámetros libres
+    \item De forma alternativa o adicional, introducir parámetros adaptativos, mucho más flexibles a la hora de trabajar con problemas de distintas carácterísticas. Estos parámetros adaptativos dependerían también de algunos parámetros, pero definitivamente de muchos menos parámetros que los que se especifican en nuestra metaheurística
+\end{itemize}
 
 \pagebreak
 
