@@ -107,8 +107,6 @@ class Player:
 
             # Generamos el nuevo jugador
             # Si el jugador no es valido, lo ignoramos
-            # TODO -- esto hacerlo con mas cuidado. Jugadores en el borde no se pueden acercar bien
-            # al borde
             new_player = None
             try:
                 new_player = Player(self.dimension, new_position)

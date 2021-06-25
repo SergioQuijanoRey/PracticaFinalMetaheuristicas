@@ -164,7 +164,7 @@ class Population:
         # Reducimos el tamaño de la poblacion
         self.number_of_players = self.number_of_players - len(indexes)
 
-    # TODO -- testear porque tengo dudas y puede ser critico
+    # TODO -- testear porque puede ser critico
     def resurrect(self, index):
         """Resucita un jugador muerto. No lo elimina de la lista y lo vuelve a meter modificado,
         directamente se modifica la posicion del jugador"""
