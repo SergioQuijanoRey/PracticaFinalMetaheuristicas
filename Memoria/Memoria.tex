@@ -146,7 +146,7 @@ Para trabajar con dicha competición, usaremos el \emph{software} desarrollado p
 
 En nuestro caso, como indicaron los profesores de la asignatura, por problemas con los tiempos de cómputo, trabajaremos con dimensión 10 y 30. Además, repetiremos por cada función y por cada dimensión, 10 ejecuciones distintas.
 
-Por tanto, usamos un \emph{fork} de este repositorío para desarrollar nuestro trabajo, que se encuentra en \cite{repositorio:online}.
+Por tanto, usamos un \emph{fork} de este repositorio para desarrollar nuestro trabajo, que se encuentra en \cite{repositorio:online}.
 
 \pagebreak
 \section{Descripción de la metaheurística} \label{descripcion}
@@ -174,7 +174,7 @@ La siguiente imagen, extraída de \cite{other_paper:paper}, ilustra de forma cla
     \caption{Ilustración de la mecánica del cierre del círculo}
 \end{figure}
 
-Notar que la idea más natural para representar esta mecánica es cerrar el círculo sobre el espacio de búsqueda. Sin embargo, es una mala decisión, pues estamos restringiendo arbitrariamente soluciones en los bordes del espacio de búsqueda real, donde pueden encontrarse soluciones de buena calidad. Es por tanto que preferimos materializar la idea del círculo que se cierra sobre el fitness de los jugadores en referencia al mejor jugadr en vez de restringir el espacio de búsqueda.
+Notar que la idea más natural para representar esta mecánica es cerrar el círculo sobre el espacio de búsqueda. Sin embargo, es una mala decisión, pues estamos restringiendo arbitrariamente soluciones en los bordes del espacio de búsqueda real, donde pueden encontrarse soluciones de buena calidad. Es por tanto que preferimos materializar la idea del círculo que se cierra sobre el fitness de los jugadores en referencia al mejor jugador en vez de restringir el espacio de búsqueda.
 
 En cuarto lugar, hay una cierta probabilidad de revivir si un jugador muere, aunque no es muy alta. Cuando un jugador revive, reaparece sin nada de lo que habías estado recolectando durante la partida. Se otorga un periodo de inmunidad en el que el jugador que ha revivido tiene que recolectar rápidamente recursos para ser competitivo contra jugadores que van más avanzados en la partida. Además, puede ser que reaparezcan fuera del círculo, luego deben lograr entrar al círculo en el tiempo de gracia
 
@@ -845,7 +845,7 @@ PSO           &  1.166667 &  1.166667 &  1.200000 &  1.433333 &  1.733333 &  1.8
 
 En este caso, vemos que hasta el 30\% de las evaluaciones estamos empleando las evaluaciones de un modo u otro, aunque no sea efectivo. Nuestra posición en el ranking empeora con las evaluaciones pero vuelve a bajar algo, lo que es indicativo de que estamos empleando las evaluaciones del \emph{fitness} de forma más efectiva que cuando no teníamos hibridación, aunque no de forma tan efectiva como las dos metaheurísticas con las que estamos comparando.
 
-\subsection{Resultados en dimensión 30}
+\subsection{Resultados en dimensión 30} \label{resultados_30_memetic}
 
 \begin{table}[H]
 \centering
@@ -974,15 +974,14 @@ Con todo este trabajo, podemos proponer algunas mejoras que se siguen de los pro
 
 En primer lugar, para una futura implementación, es necesario abandonar el uso del patrón \emph{Singleton}. En primer lugar, porque tiene un efecto negativo sobre los tiempos de cómputo. En segundo lugar, por todos los problemas que puede introducir a nivel de diseño, como por ejemplo problemas a la hora de escribir \emph{testing} al código. Cabe resaltar que el uso actual que hacemos del patrón no permite que introduzcamos paralelismo a la metaheurística, lo que sería muy interesante porque la base poblacional puede explotar en varias partes dicho paralelismo.
 
-En segundo lugar, hemos desarrollado una metaheurística que depende de demasiados parámetros. A la hora de aplicar la metaheurística de forma eficiente sobre un problema nuevo, debemos hacer \emph{parameter tuning} de forma efectiva para lograr buenos resultados. Con tantos parámetros libre, una técnica como \emph{Grid Search} supone unos tiempos de cómputo no razonables. Por tanto, se proponen dos posibles soluciones a este problema:
+En segundo lugar, hemos desarrollado una metaheurística que depende de demasiados parámetros. Por limitaciones computacionales, no hemos fijado los parámetros óptimos para dimensión 30, como hemos visto en \emph{\ref{resultados_30_memetic}. \nameref{resultados_30_memetic}}. A la hora de aplicar la metaheurística de forma eficiente sobre un problema nuevo, debemos hacer \emph{parameter tuning} de forma efectiva para lograr buenos resultados. Con tantos parámetros libre, una técnica como \emph{Grid Search} supone unos tiempos de cómputo no razonables. Por tanto, se proponen dos posibles soluciones a este problema:
 
 \begin{itemize}
     \item Realizar un estudio de los parámetros óptimos para distintos problemas, e intentar fijar el mayor número de parámetros libres posibles (aquellos con baja variabilidad entre distintos problemas). Con ello, solo se tendría que realizar \emph{parameter tuning} sobre una conjunto reducido de parámetros libres
     \item De forma alternativa o adicional, introducir parámetros adaptativos, mucho más flexibles a la hora de trabajar con problemas de distintas carácterísticas. Estos parámetros adaptativos dependerían también de algunos parámetros, pero definitivamente de muchos menos parámetros que los que se especifican en nuestra metaheurística
 \end{itemize}
 
-% TODO -- funcionamos mal en dimensiones altas. Probar con una busqueda local suave mejor para dimensiones altas, y ver si eso hace que seamos mas competitivos
-% TODO -- la busqueda local suave sospechamos que es poco inteligente
+También hemos comprobado que nuestra metaheurística base funciona mal en dimensionalidades altas. Por tanto, debemos trabajar ese problema que tiene nuestra metaheurística. Tras el trabajo realizado, sospechamos que la búsqueda local suave que empleamos es demasiado suave y poco inteligente. Esta decisión que tomamos para no basar nuestra metaheurística en una búsqueda local quizás fue demasiado radical. Por tanto sería muy interesante probar con una búsqueda local suave algo más inteligente, sin llegar a provocar que la Metaheurística básica sin hibridación dependa completamente de la búsqueda local, siendo las dinámicas basadas en \emph{Battle Royale} irrelevantes.
 
 \pagebreak
 
