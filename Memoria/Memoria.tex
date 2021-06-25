@@ -603,6 +603,7 @@ Best &             0 &         27 &          3 \\
 \hline
 \end{tabular}
     \caption{Media del error tras el 100\% de las evaluaciones y cuenta del mejor algoritmo}
+    \label{errores_30_standar}
 \end{table}
 
 De nuevo, obtenemos unos resultados malos en comparación a las dos metaheurísticas consideradas. Y de nuevo, tenemos resultados órdenes de magnitud superiores. Del mismo modo, mostramos los rankings:
@@ -731,9 +732,240 @@ Así que empleamos como mucho 375 evaluaciones del \emph{fitness} por cada búsq
 \pagebreak
 \section{Resultados de la hibridación}
 
+Vamos a seguir el mismo proceso para analizar los resultados que el proceso seguido para la metaheurística sin la hibridación.
+
 \subsection{Resultados en dimensión 10}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Función} & \textbf{Battle Royale} &         \textbf{DE} &        \textbf{PSO} \\
+\hline
+F01  &     9.115e+06 &  0.000e+00 &  5.255e+07 \\
+F02  &     1.863e+09 &  0.000e+00 &  1.000e+00 \\
+F03  &     9.465e+03 &  0.000e+00 &  1.989e+03 \\
+F04  &     1.915e+01 &  1.105e-04 &  4.684e+01 \\
+F05  &     7.290e+01 &  1.151e+02 &  3.212e+01 \\
+F06  &     4.251e+01 &  3.460e+01 &  1.001e+01 \\
+F07  &     1.959e+02 &  3.848e+01 &  4.275e+01 \\
+F08  &     6.930e+01 &  2.983e+01 &  2.203e+01 \\
+F09  &     9.691e+02 &  1.938e+02 &  5.686e+01 \\
+F10  &     1.314e+03 &  3.597e+02 &  1.077e+03 \\
+F11  &     8.613e+01 &  1.942e-02 &  3.843e+01 \\
+F12  &     1.960e+06 &  4.931e+00 &  2.517e+06 \\
+F13  &     6.884e+03 &  5.988e+00 &  8.409e+03 \\
+F14  &     3.277e+02 &  5.240e-02 &  9.993e+01 \\
+F15  &     3.496e+03 &  6.060e-02 &  2.066e+03 \\
+F16  &     3.190e+02 &  4.561e+02 &  1.415e+02 \\
+F17  &     1.312e+02 &  2.350e+01 &  6.497e+01 \\
+F18  &     5.086e+03 &  3.630e-02 &  1.484e+04 \\
+F19  &     2.373e+03 &  5.192e-03 &  3.220e+03 \\
+F20  &     1.476e+02 &  3.837e+02 &  8.444e+01 \\
+F21  &     1.407e+02 &  1.889e+02 &  1.320e+02 \\
+F22  &     3.111e+02 &  1.005e+02 &  7.740e+01 \\
+F23  &     3.835e+02 &  8.098e+02 &  3.304e+02 \\
+F24  &     2.681e+02 &  1.000e+02 &  1.810e+02 \\
+F25  &     3.584e+02 &  4.040e+02 &  4.478e+02 \\
+F26  &     6.211e+02 &  2.706e+02 &  3.729e+02 \\
+F27  &     4.526e+02 &  3.897e+02 &  4.134e+02 \\
+F28  &     4.981e+02 &  3.517e+02 &  4.698e+02 \\
+F29  &     4.154e+02 &  2.375e+02 &  3.193e+02 \\
+F30  &     1.543e+06 &  8.051e+04 &  6.352e+05 \\
+Best &             1 &         20 &          9 \\
+\hline
+\end{tabular}
+    \caption{Media del error tras el 100\% de las evaluaciones y cuenta del mejor algoritmo}
+\end{table}
+
+En esta ocasión, somos la mejor metaheurística en un único caso. Esto ya muestra una mejora respecto a la metaheurística sin hibridar, en la que no conseguíamos ser la mejor metaheurística en ninguna ocasión. Además, no tenemos las diferencias en órdenes de maginitud que sí teníamos en la metaheurística original.
+
+Mostramos ahora el ranking entre las distintas funciones:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Función} & \textbf{Battle Royale} &         \textbf{DE} &        \textbf{PSO} \\
+\hline
+F01  &             2 &      1 &      3 \\
+F02  &             3 &      1 &      2 \\
+F03  &             3 &      1 &      2 \\
+F04  &             2 &      1 &      3 \\
+F05  &             2 &      3 &      1 \\
+F06  &             3 &      2 &      1 \\
+F07  &             3 &      1 &      2 \\
+F08  &             3 &      2 &      1 \\
+F09  &             3 &      2 &      1 \\
+F10  &             3 &      1 &      2 \\
+F11  &             3 &      1 &      2 \\
+F12  &             2 &      1 &      3 \\
+F13  &             2 &      1 &      3 \\
+F14  &             3 &      1 &      2 \\
+F15  &             3 &      1 &      2 \\
+F16  &             2 &      3 &      1 \\
+F17  &             3 &      1 &      2 \\
+F18  &             2 &      1 &      3 \\
+F19  &             2 &      1 &      3 \\
+F20  &             2 &      3 &      1 \\
+F21  &             2 &      3 &      1 \\
+F22  &             3 &      2 &      1 \\
+F23  &             2 &      3 &      1 \\
+F24  &             3 &      1 &      2 \\
+F25  &             1 &      2 &      3 \\
+F26  &             3 &      1 &      2 \\
+F27  &             3 &      1 &      2 \\
+F28  &             3 &      1 &      2 \\
+F29  &             3 &      1 &      2 \\
+F30  &             3 &      1 &      2 \\
+Mean &         2.567 &  1.500 &  1.933 \\
+\hline
+\end{tabular}
+    \caption{Ranking de los tres algoritmos y media en el ranking}
+\end{table}
+
+Y en esta tabla se reafirma lo que estábamos comentado. Conseguimos poner nuestra metaheurística como mejor en una ocasión, y además logramos ser la segunda mejor metaheurística en múltiples ocasiones, superando en distintas funciones tanto a \emph{DE} ($f25$ por ejemplo) como a \emph{PSO} ($f18$, por ejemplo). Además, antes de la hibridación, teníamos media en el ranking de 2.833, tras la hibridación, 2.567. Por tanto, tenemos razones para pensar que la hibridación se ha realizado de forma efectiva.
+
+Veamos ahora cómo avanza el ranking según el porcentaje de las evaluaciones del \emph{fitness} que se han consumido:
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Metaheurística} &       1   &       2   &       3   &       5   &       10  &       20  &       30  &       40  &       50  &       60  &       70  &       80  &       90  &       100 \\
+\hline
+BATTLE ROYALE &  2.100000 &  2.133333 &  2.166667 &  2.700000 &  2.900000 &  2.833333 &  2.8 &  2.8 &  2.800000 &  2.800000 &  2.800000 &  2.800000 &  2.800000 &  2.566667 \\
+DE            &  2.733333 &  2.700000 &  2.633333 &  1.866667 &  1.366667 &  1.366667 &  1.4 &  1.4 &  1.433333 &  1.466667 &  1.466667 &  1.466667 &  1.466667 &  1.500000 \\
+PSO           &  1.166667 &  1.166667 &  1.200000 &  1.433333 &  1.733333 &  1.800000 &  1.8 &  1.8 &  1.766667 &  1.733333 &  1.733333 &  1.733333 &  1.733333 &  1.933333 \\
+\hline
+\end{tabular}}
+    \caption{Ranking según el avance del porcentaje de evaluaciones consumidas}
+\end{table}
+
+En este caso, vemos que hasta el 30\% de las evaluaciones estamos empleando las evaluaciones de un modo u otro, aunque no sea efectivo. Nuestra posición en el ranking empeora con las evaluaciones pero vuelve a bajar algo, lo que es indicativo de que estamos empleando las evaluaciones del \emph{fitness} de forma más efectiva que cuando no teníamos hibridación, aunque no de forma tan efectiva como las dos metaheurísticas con las que estamos comparando.
+
 \subsection{Resultados en dimensión 30}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Función} & \textbf{Battle Royale} &         \textbf{DE} &        \textbf{PSO} \\
+\hline
+F01  &     1.486e+07 &  4.909e+04 &  4.175e+09 \\
+F02  &     1.972e+42 &  1.309e+19 &  1.000e+00 \\
+F03  &     1.174e+05 &  3.481e+03 &  5.453e+04 \\
+F04  &     1.585e+02 &  8.430e+01 &  1.183e+03 \\
+F05  &     4.699e+02 &  2.015e+02 &  2.170e+02 \\
+F06  &     9.006e+01 &  6.320e+00 &  3.694e+01 \\
+F07  &     1.702e+03 &  2.334e+02 &  3.596e+02 \\
+F08  &     4.056e+02 &  1.894e+02 &  1.745e+02 \\
+F09  &     8.319e+03 &  6.530e+01 &  2.842e+03 \\
+F10  &     5.938e+03 &  3.764e+03 &  6.938e+03 \\
+F11  &     4.935e+03 &  7.958e+01 &  1.207e+03 \\
+F12  &     1.353e+07 &  3.258e+05 &  3.586e+08 \\
+F13  &     3.240e+04 &  1.536e+02 &  4.508e+07 \\
+F14  &     6.208e+04 &  7.100e+01 &  3.059e+05 \\
+F15  &     9.116e+03 &  6.256e+01 &  2.737e+05 \\
+F16  &     2.203e+03 &  1.319e+03 &  1.568e+03 \\
+F17  &     7.896e+02 &  4.809e+02 &  4.725e+02 \\
+F18  &     5.140e+05 &  6.122e+01 &  2.170e+06 \\
+F19  &     3.820e+05 &  3.572e+01 &  1.260e+06 \\
+F20  &     9.412e+02 &  2.751e+02 &  4.621e+02 \\
+F21  &     6.127e+02 &  3.255e+02 &  4.113e+02 \\
+F22  &     5.943e+03 &  1.002e+02 &  1.027e+03 \\
+F23  &     1.004e+03 &  5.346e+02 &  6.404e+02 \\
+F24  &     1.038e+03 &  6.059e+02 &  7.095e+02 \\
+F25  &     4.613e+02 &  3.870e+02 &  6.864e+02 \\
+F26  &     2.651e+03 &  4.038e+02 &  3.369e+03 \\
+F27  &     1.028e+03 &  4.925e+02 &  8.068e+02 \\
+F28  &     5.291e+02 &  3.943e+02 &  1.105e+03 \\
+F29  &     1.851e+03 &  1.025e+03 &  1.409e+03 \\
+F30  &     2.378e+06 &  3.657e+03 &  1.359e+07 \\
+Best &             0 &         27 &          3 \\
+\hline
+\end{tabular}
+    \caption{Media del error tras el 100\% de las evaluaciones y cuenta del mejor algoritmo}
+\end{table}
+
+En este caso, seguimos sin lograr tener la mejor metaheurística en ninguna de las funciones. Sin embarogo, tenemos errores órdenes de magnitud por debajo de los resultados que obeníamos en \emph{\ref{errores_30_standar}. \nameref{errores_30_standar}}. pero todavía muy lejanos a los obtenidos por \emph{DE} y \emph{PSO}.
+
+Mostramos ahora la tabla con los \emph{rankings}:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Función} & \textbf{Battle Royale} &         \textbf{DE} &        \textbf{PSO} \\
+\hline
+F01  &             2 &      1 &      3 \\
+F02  &             3 &      2 &      1 \\
+F03  &             3 &      1 &      2 \\
+F04  &             2 &      1 &      3 \\
+F05  &             3 &      1 &      2 \\
+F06  &             3 &      1 &      2 \\
+F07  &             3 &      1 &      2 \\
+F08  &             3 &      2 &      1 \\
+F09  &             3 &      1 &      2 \\
+F10  &             2 &      1 &      3 \\
+F11  &             3 &      1 &      2 \\
+F12  &             2 &      1 &      3 \\
+F13  &             2 &      1 &      3 \\
+F14  &             2 &      1 &      3 \\
+F15  &             2 &      1 &      3 \\
+F16  &             3 &      1 &      2 \\
+F17  &             3 &      2 &      1 \\
+F18  &             2 &      1 &      3 \\
+F19  &             2 &      1 &      3 \\
+F20  &             3 &      1 &      2 \\
+F21  &             3 &      1 &      2 \\
+F22  &             3 &      1 &      2 \\
+F23  &             3 &      1 &      2 \\
+F24  &             3 &      1 &      2 \\
+F25  &             2 &      1 &      3 \\
+F26  &             2 &      1 &      3 \\
+F27  &             3 &      1 &      2 \\
+F28  &             2 &      1 &      3 \\
+F29  &             3 &      1 &      2 \\
+F30  &             2 &      1 &      3 \\
+Mean &         2.567 &  1.100 &  2.333 \\
+\hline
+\end{tabular}
+    \caption{Ranking de los tres algoritmos y media en el ranking}
+\end{table}
+
+En este caso, tenemos resultados muy similares en media a dimensión 10. Sin embargo, como ya hemos comentado, no conseguimos ser la mejor metaheurística en ningún caso. Sin hibridación nuestra media en ranking era de 3.00. Así que nuestra hibridación, aunque no consiga que nuestra metaheurística sea la primera en ningún caso, sí que hace que seamos mucho más competitivos en dimensiones altas.
+
+Mostramos ahora el ranking según cómo avanza el porcentaje de evaluaciones del \emph{fitness}:
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Metaheurística} &       1   &       2   &       3   &       5   &       10  &       20  &       30  &       40  &       50  &       60  &       70  &       80  &       90  &       100 \\
+\hline
+BATTLE ROYALE &  2.300000 &  2.400000 &  2.666667 &  3.000000 &  3.000000 &  2.966667 &  2.966667 &  2.966667 &  2.866667 &  2.866667 &  2.833333 &  2.6 &  2.566667 &  2.566667 \\
+DE            &  2.566667 &  2.466667 &  2.133333 &  1.266667 &  1.133333 &  1.100000 &  1.066667 &  1.066667 &  1.066667 &  1.066667 &  1.100000 &  1.1 &  1.100000 &  1.100000 \\
+PSO           &  1.133333 &  1.133333 &  1.200000 &  1.733333 &  1.866667 &  1.933333 &  1.966667 &  1.966667 &  2.066667 &  2.066667 &  2.066667 &  2.3 &  2.333333 &  2.333333 \\
+\hline
+\end{tabular}}
+    \caption{Ranking según el avance del porcentaje de evaluaciones consumidas}
+    \label{ranking_30_memetic}
+\end{table}
+
+En este caso obtenemos unos resultados muy interesantes. Empeoramos hasta ser los peores a partir del 5\% de las evaluaciones del \emph{fitness}. Sin embargo, a partir del 10\% de las evaluaciones comienza la metaheurística a ser más competitiva, mejorando monótamente hasta consumir todas las evaluaciones del \emph{fitness}.
+
 \subsection{Conclusiones}
+
+Por todo lo que hemos comentado, la hibridación ha sido efecitva pues hemos mejorado significativamente los resultados que hemos obtenido. Mejora tanto en la comparación con la metaheurística sin hibridar como en comparación a las metaheurísticas \emph{DE} y \emph{PSO}.
+
+En dimensión 30, no hemos conseguido ser tan competitivos como en dimensión 10. Esto puede venir provocado porque, como ya hemos comentado anteriormente, nuestra metaheurística base funciona mal en dimensionalidades altas. Sin embargo, es en esta dimensión donde obtenemos los resultados más interesantes que muestra la \emph{Tabla \ref{ranking_30_memetic}. \nameref{ranking_30_memetic}}. En dicha tabla queda claro que nuestra hibridación provoca, en esta dimensión concreta, que el consumo de las evaluaciones del \emph{fitness} sea efectiva. Es decir, que no estamos desperdiciando evaluaciones del \emph{fitness} en fases tardías de la búsqueda.
+
+En la misma tabla vemos que tenemos un inicio muy malo en comparación con las otras dos metaheurística. Hasta que no llegamos al 20\% de las evaluaciones, la metaheurística no empieza a mejorar de nuevo. Esto puede ser un indicativo de que no tenemos unos parámetros buenos para esta dimensionalidad, lo cual es razonable pues en \emph{\ref{tuning}. \nameref{tuning}} ya comentábamos que por temas de eficiencia el \emph{tuning} se basaba en dimensión 10, ignorando la dimensión 30.
+
+En resumen, la hibridación ha sido efectiva aunque no soluciona algunos de los problemas de la metaheurística base. Profundarizaremos estos problemas en \emph{\ref{mejoras}. \nameref{mejoras}}.
 
 \pagebreak
 \section{Propuesta de mejoras} \label{mejoras}
@@ -748,6 +980,9 @@ En segundo lugar, hemos desarrollado una metaheurística que depende de demasiad
     \item Realizar un estudio de los parámetros óptimos para distintos problemas, e intentar fijar el mayor número de parámetros libres posibles (aquellos con baja variabilidad entre distintos problemas). Con ello, solo se tendría que realizar \emph{parameter tuning} sobre una conjunto reducido de parámetros libres
     \item De forma alternativa o adicional, introducir parámetros adaptativos, mucho más flexibles a la hora de trabajar con problemas de distintas carácterísticas. Estos parámetros adaptativos dependerían también de algunos parámetros, pero definitivamente de muchos menos parámetros que los que se especifican en nuestra metaheurística
 \end{itemize}
+
+% TODO -- funcionamos mal en dimensiones altas. Probar con una busqueda local suave mejor para dimensiones altas, y ver si eso hace que seamos mas competitivos
+% TODO -- la busqueda local suave sospechamos que es poco inteligente
 
 \pagebreak
 
