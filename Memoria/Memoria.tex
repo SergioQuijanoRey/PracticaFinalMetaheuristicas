@@ -191,7 +191,7 @@ En las distintas iteraciones, realizaremos una búsqueda local suave sobre las s
 Como era de esperar, esta propuesta original debe ser modificada ligeramente, pues algunas decisiones a nivel de ingeniería tienen más sentido. Las modificaciones que hemos considerado tras experimentar con la implementación de la metaheurística (implementación que se desarrollará en \emph{\ref{implementacion}. \nameref{implementacion}}) son las siguientes:
 
 \begin{itemize}
-    \item En un principio habíamos pensado en emplear la distancia euclídea para comprobar si dos jugadores estaban demasiado cerca. Sin embago, acabamos usando la distancia Manhattan porque es más rápida de computar. Esta distancia viene dada por $$\sum |w_i|$$ donde los coeficientes se definen como $$w := jugador_1 - jugador_2$$
+    \item En un principio habíamos pensado en emplear la distancia euclídea para comprobar si dos jugadores estaban demasiado cerca. Sin embargo, acabamos usando la distancia Manhattan porque es más rápida de computar. Esta distancia viene dada por $$\sum |w_i|$$ donde los coeficientes se definen como $$w := jugador_1 - jugador_2$$
     \item La mecánica de eliminar a los $\lambda$ peores jugadores en cada iteración, a partir de cierto momento, provoca que perdamos mucha variedad en la población prematuramente. En vez de eso, definimos un porcentaje que, a partir de un valor del radio del círculo $r$ por encima de $1.0$, que va descendiendo iteración tras iteración hasta llegar a $r = 1.0$. En cada iteración se eliminan los jugadores con \emph{fitness} más de $r$ veces peor que el \emph{fitness} de la mejor solución (recordad que estamos en un problema de minimización de las funciones objetivo)
     \item Tras hacer \emph{parameter tuning} en la sección \emph{\ref{tuning}. \nameref{tuning}}, la probabilidad de revivir acaba siendo 0.5, para nada es una probabilidad baja
     \item Por su poca relevancia, ignoramos la parte en la que comentamos que si un jugador muere contra el mejor jugador, forzosamente revive
@@ -199,7 +199,7 @@ Como era de esperar, esta propuesta original debe ser modificada ligeramente, pu
 
 \subsection{Trabajo existente}
 
-En el \emph{paper} \cite{other_paper:paper}, se presenta una metaheurística basada también en este género de videojuegos. Sin embargo, en el proceso empleado para materializarla en una metaheurística concreta se toman decisiones completamente distintas a las que se presentan en este  trabajo. Por tanto, aunque la inspiración sea común, en la práctica las dos metaheurística son significativamente distintas.
+En el \emph{paper} \cite{other_paper:paper}, se presenta una metaheurística basada también en este género de videojuegos. Sin embargo, en el proceso empleado para materializarla en una metaheurística concreta se toman decisiones completamente distintas a las que se presentan en este trabajo. Por tanto, aunque la inspiración sea común, en la práctica las dos metaheurística son significativamente distintas.
 
 En \cite{other_paper:paper}, cuando dos jugadores están cerca, se disparan entre ellos. Esto tiene dos efectos. El primero, el jugador que recibe el disparo aumenta en uno el contador de disparos recibido. Cuando el contador llega a un valor fijado, el jugador muere y resucita en un punto aleatorio del mapa. En segundo lugar, el jugador que recibe el disparo se mueve para evitar recibir más disparos. Este movimiento se hace en dirección hacia el mejor jugador.
 
@@ -388,7 +388,7 @@ Este proceso lo realizamos de forma manual usando la función \lstinline{paramet
 
 A pesar de que los mejores resultados los obtengamos con 25.000 jugadores, elegimos usar 20.000 jugadores, porque los tiempos de ejecución son demasiado lentos con 25.000 jugadores. Por el mismo motivo, paramos la búsqueda aunque valores más altos sean prometedores.
 
-A continuación, exploramos la probabilida de resucitar:
+A continuación, exploramos la probabilidad de resucitar:
 
 \begin{table}[H]
     \centering
@@ -491,7 +491,7 @@ Best &             0 &         21 &          9 \\
 
 A la vista de esta tabla, observando directamente la última columna, vemos que nuestro algoritmo nunca gana a \emph{DE} ni a \emph{PSO}.
 
-En muchas ocasiones, obtenemos resultados órdenes de magnitud por encima del segundo peor resultado. Por ejemplo, para $F30$, obtenemos un resultado 10 veces peor que el segundo peor. En $f01$, obenemos un resultado 100 veces peor que el segundo peor. Por tanto, concluimos que estamos obteniendo resultados significativamente peores que los obtenidos por las metaheurísticas de comparación.
+En muchas ocasiones, obtenemos resultados órdenes de magnitud por encima del segundo peor resultado. Por ejemplo, para $F30$, obtenemos un resultado 10 veces peor que el segundo peor. En $f01$, obtenemos un resultado 100 veces peor que el segundo peor. Por tanto, concluimos que estamos obteniendo resultados significativamente peores que los obtenidos por las metaheurísticas de comparación.
 
 En la siguiente tabla, mostramos el ranking sobre las distintas funciones:
 
@@ -650,7 +650,7 @@ Mean &         3.000 &  1.100 &  1.900 \\
     \caption{Ranking de los tres algoritmos y media en el ranking}
 \end{table}
 
-En esta dimensión, los resultados han sido todavía peores, no logrando en ninguna funcion alcanzar el puesto segundo. Podemos suponer, por tanto, que nuestra metaheurística funciona peor cuantas más dimensiones consideremos. Del mismo modo, mostramos el ranking según avanzan los porcentajes de evaluación del fitness:
+En esta dimensión, los resultados han sido todavía peores, no logrando en ninguna función alcanzar el puesto segundo. Podemos suponer, por tanto, que nuestra metaheurística funciona peor cuantas más dimensiones consideremos. Del mismo modo, mostramos el ranking según avanzan los porcentajes de evaluación del fitness:
 
 
 \begin{table}[H]
@@ -675,7 +675,7 @@ En esta dimensión, nuestra metaheurística deja de usar de forma efectiva las e
 
 Como se muestra en las tablas \emph{\ref{ranking_1}. \nameref{ranking_1}} y \emph{\ref{ranking_2}. \nameref{ranking_2}}, no estamos aprovechando las evaluaciones del \emph{fitness} a partir de cierto porcentaje de forma tan efectiva como lo hacen \emph{DE} y \emph{PSO}. Sospechamos que necesitamos introducir mayor explotación para poder ser competitivos, pues de momento tenemos una metaheurística que diversifica demasiado. Esto se visibiliza en resultados no muy malos en porcentajes bajos de las evaluaciones del \emph{fitness}, y con resultados que empeoran relativamente a las otras dos metaheurísticas con el paso de las evaluaciones del \emph{fitness}.
 
-Además, viendo estos resultados, nos damos cuenta de que al final de la fase dos de la metaheurística, devolvemos el mejor jugador directamente. Pueden quedar muchas evaluaciones del \emph{fitness} sin consumir, pues la fase dos puede acabar si solo queda un jugador vivo, aunque queden maś evaluaciones del \emph{fitness}. Por tanto, y como comentaremos en \emph{\ref{hibridacion}. \nameref{hibridacion}}, resolveremos este problema introduciendo una búsqueda local fuerte sobre el mejor jugador hasta agotar las evaluaciones.
+Además, viendo estos resultados, nos damos cuenta de que al final de la fase dos de la metaheurística, devolvemos el mejor jugador directamente. Pueden quedar muchas evaluaciones del \emph{fitness} sin consumir, pues la fase dos puede acabar si solo queda un jugador vivo, aunque queden más evaluaciones del \emph{fitness}. Por tanto, y como comentaremos en \emph{\ref{hibridacion}. \nameref{hibridacion}}, resolveremos este problema introduciendo una búsqueda local fuerte sobre el mejor jugador hasta agotar las evaluaciones.
 
 Notar que podríamos haber corregido este inconveniente empleando búsquedas locales suaves hasta agotar las iteraciones. Sin embargo, el proceso de lanzar todos los casos tardó aproximadamente unas seis horas, y por tanto, no nos es factible volver a repetir estos cómputos.
 
@@ -778,7 +778,7 @@ Best &             1 &         20 &          9 \\
     \caption{Media del error tras el 100\% de las evaluaciones y cuenta del mejor algoritmo}
 \end{table}
 
-En esta ocasión, somos la mejor metaheurística en un único caso. Esto ya muestra una mejora respecto a la metaheurística sin hibridar, en la que no conseguíamos ser la mejor metaheurística en ninguna ocasión. Además, no tenemos las diferencias en órdenes de maginitud que sí teníamos en la metaheurística original.
+En esta ocasión, somos la mejor metaheurística en un único caso. Esto ya muestra una mejora respecto a la metaheurística sin hibridar, en la que no conseguíamos ser la mejor metaheurística en ninguna ocasión. Además, no tenemos las diferencias en órdenes de magnitud que sí teníamos en la metaheurística original.
 
 Mostramos ahora el ranking entre las distintas funciones:
 
@@ -889,7 +889,7 @@ Best &             0 &         27 &          3 \\
     \caption{Media del error tras el 100\% de las evaluaciones y cuenta del mejor algoritmo}
 \end{table}
 
-En este caso, seguimos sin lograr tener la mejor metaheurística en ninguna de las funciones. Sin embarogo, tenemos errores órdenes de magnitud por debajo de los resultados que obeníamos en \emph{\ref{errores_30_standar}. \nameref{errores_30_standar}}. pero todavía muy lejanos a los obtenidos por \emph{DE} y \emph{PSO}.
+En este caso, seguimos sin lograr tener la mejor metaheurística en ninguna de las funciones. Sin embargo, tenemos errores órdenes de magnitud por debajo de los resultados que obteníamos en \emph{\ref{errores_30_standar}. \nameref{errores_30_standar}}, pero todavía muy lejanos a los obtenidos por \emph{DE} y \emph{PSO}.
 
 Mostramos ahora la tabla con los \emph{rankings}:
 
@@ -959,13 +959,13 @@ En este caso obtenemos unos resultados muy interesantes. Empeoramos hasta ser lo
 
 \subsection{Conclusiones}
 
-Por todo lo que hemos comentado, la hibridación ha sido efecitva pues hemos mejorado significativamente los resultados que hemos obtenido. Mejora tanto en la comparación con la metaheurística sin hibridar como en comparación a las metaheurísticas \emph{DE} y \emph{PSO}.
+Por todo lo que hemos comentado, la hibridación ha sido efectiva pues hemos mejorado significativamente los resultados que hemos obtenido. Mejora tanto en la comparación con la metaheurística sin hibridar como en comparación a las metaheurísticas \emph{DE} y \emph{PSO}.
 
 En dimensión 30, no hemos conseguido ser tan competitivos como en dimensión 10. Esto puede venir provocado porque, como ya hemos comentado anteriormente, nuestra metaheurística base funciona mal en dimensionalidades altas. Sin embargo, es en esta dimensión donde obtenemos los resultados más interesantes que muestra la \emph{Tabla \ref{ranking_30_memetic}. \nameref{ranking_30_memetic}}. En dicha tabla queda claro que nuestra hibridación provoca, en esta dimensión concreta, que el consumo de las evaluaciones del \emph{fitness} sea efectiva. Es decir, que no estamos desperdiciando evaluaciones del \emph{fitness} en fases tardías de la búsqueda.
 
 En la misma tabla vemos que tenemos un inicio muy malo en comparación con las otras dos metaheurística. Hasta que no llegamos al 20\% de las evaluaciones, la metaheurística no empieza a mejorar de nuevo. Esto puede ser un indicativo de que no tenemos unos parámetros buenos para esta dimensionalidad, lo cual es razonable pues en \emph{\ref{tuning}. \nameref{tuning}} ya comentábamos que por temas de eficiencia el \emph{tuning} se basaba en dimensión 10, ignorando la dimensión 30.
 
-En resumen, la hibridación ha sido efectiva aunque no soluciona algunos de los problemas de la metaheurística base. Profundarizaremos estos problemas en \emph{\ref{mejoras}. \nameref{mejoras}}.
+En resumen, la hibridación ha sido efectiva aunque no soluciona algunos de los problemas de la metaheurística base. Profundizaremos el análisis de estos problemas en \emph{\ref{mejoras}. \nameref{mejoras}}.
 
 \pagebreak
 \section{Propuesta de mejoras} \label{mejoras}
@@ -978,7 +978,7 @@ En segundo lugar, hemos desarrollado una metaheurística que depende de demasiad
 
 \begin{itemize}
     \item Realizar un estudio de los parámetros óptimos para distintos problemas, e intentar fijar el mayor número de parámetros libres posibles (aquellos con baja variabilidad entre distintos problemas). Con ello, solo se tendría que realizar \emph{parameter tuning} sobre una conjunto reducido de parámetros libres
-    \item De forma alternativa o adicional, introducir parámetros adaptativos, mucho más flexibles a la hora de trabajar con problemas de distintas carácterísticas. Estos parámetros adaptativos dependerían también de algunos parámetros, pero definitivamente de muchos menos parámetros que los que se especifican en nuestra metaheurística
+    \item De forma alternativa o adicional, introducir parámetros adaptativos, mucho más flexibles a la hora de trabajar con problemas de distintas características. Estos parámetros adaptativos dependerían también de algunos parámetros, pero definitivamente de muchos menos parámetros que los que se especifican en nuestra metaheurística
 \end{itemize}
 
 También hemos comprobado que nuestra metaheurística base funciona mal en dimensionalidades altas. Por tanto, debemos trabajar ese problema que tiene nuestra metaheurística. Tras el trabajo realizado, sospechamos que la búsqueda local suave que empleamos es demasiado suave y poco inteligente. Esta decisión que tomamos para no basar nuestra metaheurística en una búsqueda local quizás fue demasiado radical. Por tanto sería muy interesante probar con una búsqueda local suave algo más inteligente, sin llegar a provocar que la Metaheurística básica sin hibridación dependa completamente de la búsqueda local, siendo las dinámicas basadas en \emph{Battle Royale} irrelevantes.
