@@ -5,7 +5,9 @@
     * Sergio Quijano Rey
     * [Correo UGR](sergioquijano@correo.ugr.es)
 * Metaheurística original basada en los juegos tipo *Battle Royale*
-* Memoria donde se explica la inspiración y funcionamiento de la metaheurística: [PDF](https://github.com/SergioQuijanoRey/PracticaFinalMetaheuristicas/blob/master/Memoria/Memoria.pdf)
+* Documentación entregada a los profesores:
+    * Memoria donde se explica la inspiración y funcionamiento de la metaheurística: [Memoria](https://github.com/SergioQuijanoRey/PracticaFinalMetaheuristicas/blob/master/Memoria/Memoria.pdf)
+    * Transparencias que pueden ser usadas para explicar la inspiración de la metaheurística: [Presentación](https://github.com/SergioQuijanoRey/PracticaFinalMetaheuristicas/blob/master/Presentacion/Memoria.pdf)
 * A partir del código de [Daniel Molina](https://github.com/dmolina/cec2017real)
 
 # Software necesario
