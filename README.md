@@ -6,6 +6,7 @@
     * [Correo UGR](sergioquijano@correo.ugr.es)
 * Metaheurística original basada en los juegos tipo *Battle Royale*
 * Memoria donde se explica la inspiración y funcionamiento de la metaheurística: [PDF](https://github.com/SergioQuijanoRey/PracticaFinalMetaheuristicas/blob/master/Memoria/Memoria.pdf)
+* A partir del código de [Daniel Molina](https://github.com/dmolina/cec2017real)
 
 # Software necesario
 
